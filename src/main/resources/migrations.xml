@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="khobbs">
+        <createTable tableName="covens">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="displayName" type="varchar(63)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="livingSpace" type="int" defaultValue="1"/>
+            <column name="admin" type="boolean" defaultValue="false"/>
+            <column name="activeStoryId" type="long">
+            </column>
+        </createTable>
+
+        <createTable tableName="stories">
+            <column name="covenId" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="personId" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actionId" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="storyPosition" type="int"/>
+            <column name="stateJson" type="text"/>
+        </createTable>
+
+        <addPrimaryKey tableName="stories" columnNames="covenId, personId, actionId"/>
+
+        <createTable tableName="covenIntProperties">
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="covenId" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="propVal" type="int"/>
+        </createTable>
+
+        <addPrimaryKey tableName="covenIntProperties" columnNames="name, covenId"/>
+
+        <createIndex tableName="covenIntProperties" indexName="covenIntProperties_covenId">
+            <column name="covenId" type="bigint"></column>
+        </createIndex>
+        <createIndex tableName="covenIntProperties" indexName="covenIntProperties_name">
+            <column name="name" type="varchar(255)"></column>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

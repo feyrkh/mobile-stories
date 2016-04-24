@@ -1,0 +1,81 @@
+{
+  "actionId": 1,
+  "actionCategory": "CovenAdministration",
+  "actionName": "Accept Students",
+  "actionDescription": "There's room for more students...perhaps we should recruit some?",
+  "triggers": [
+    {"conditions": "ci_Living Space > 0"},
+    {"conditions": "ci_Members <= 0"}
+  ],
+  "states": [
+    {
+      "id": 0,
+      "heading": "Accept new students",
+      "text": "Your office is flooded with letters from prospective students. All you need do is send acceptance letters.",
+      "options": [
+        {
+          "heading": "Send an acceptance letter",
+          "fields": [
+            {
+              "name": "ss_name",
+              "label": "Name",
+              "type": "text",
+              "defaultValue": "#ss_randomPersonName",
+              "minLength": 2,
+              "maxLength": 30
+            },
+            {
+              "name": "ss_focus",
+              "label": "Focus",
+              "type": "select",
+              "defaultValue": "exper",
+              "options": [
+                "Experimentation->exper",
+                "Administration->admin"
+              ]
+            }
+          ],
+          "preSubmitCalls": [
+            {
+              "function": "randomPersonName"
+            }
+          ],
+          "postSubmitCalls": [
+            {
+              "function": "registerStudent",
+              "inputs": [
+                "ss_name->studentName",
+                "ss_focus->studentFocus"
+              ]
+            }
+          ],
+          "transitions": [
+            {
+              "target": 0,
+              "triggers": ["si_registerStudent<1"]
+            },
+            {
+              "target": 1
+            }
+          ]
+        },
+        {
+          "heading": "On second thought, perhaps not...",
+          "transitions": [
+            {"target": 2}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "heading": "The letter is posted!",
+      "text": "Having sent off the letter, you're quite sure {{name}} will be on the next coach out.\n\nHopefully they will be of some help with all of the {{focus}} needed."
+    },
+    {
+      "id": 2,
+      "heading": "None of them are suitable!",
+      "text": "Perhaps this can wait."
+    }
+  ]
+}

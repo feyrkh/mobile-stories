@@ -1,0 +1,1 @@
+Congratulations on your new hire! {{name}} is ready to start immediately, with a focus on {{focus}}!

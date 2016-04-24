@@ -1,0 +1,4 @@
+*.iml
+target
+coven.ipr*.iws
+atlassian-ide-plugin.xml

@@ -1,0 +1,7 @@
+{
+  "covenId": 5,
+  "personId": 1,
+  "actionId": 42,
+  "storyPosition": 3,
+  "state": "{\"int\":1,\"float\":3.14,\"str\":\"Woohoo\", \"nested\":{\"values\":42}}"
+}
