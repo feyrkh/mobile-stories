@@ -5,12 +5,14 @@ import java.security.Principal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.liquidenthusiasm.dao.CovenDao;
+import com.liquidenthusiasm.dao.PropertyDao;
 
 public class Coven implements Principal, Sanitizable, Serializable {
 
@@ -19,6 +21,8 @@ public class Coven implements Principal, Sanitizable, Serializable {
     public static final String INT_PROP_MEMBERS = "Coven:Members";
 
     public static CovenDao covenDao;
+
+    public static PropertyDao propertyDao;
 
     private long id;
 
@@ -76,19 +80,33 @@ public class Coven implements Principal, Sanitizable, Serializable {
     @JsonIgnore
     public void setIntProperty(String propName, int propVal) {
         if (propVal == 0) {
-            covenDao.deleteIntProperty(id, propName);
+            propertyDao.deleteIntProperty(id, 0, propName);
         } else {
-            covenDao.updateIntProperty(id, propName, propVal);
+            propertyDao.updateIntProperty(id, 0, propName, propVal);
         }
     }
 
     @JsonIgnore
     public int getIntProperty(String propName) {
-        return covenDao.getIntProperty(id, propName);
+        return propertyDao.getIntProperty(id, 0, propName);
+    }
+
+    @JsonIgnore
+    public void setStrProperty(String propName, String propVal) {
+        if (StringUtils.isEmpty(propVal)) {
+            propertyDao.deleteStrProperty(id, 0, propName);
+        } else {
+            propertyDao.updateStrProperty(id, 0, propName, propVal);
+        }
+    }
+
+    @JsonIgnore
+    public String getStrProperty(String propName) {
+        return propertyDao.getStrProperty(id, 0, propName);
     }
 
     public StoryInstance getRunningStory(long actionId) {
-        return covenDao.findRunningStory(getId(), actionId);
+        return covenDao.findRunningStory(getId(), 0, actionId);
     }
 
     public void saveStory(StoryInstance storyInstance) {

@@ -2,3 +2,5 @@
 target
 coven.ipr*.iws
 atlassian-ide-plugin.xml
+coven.ipr
+coven.iws

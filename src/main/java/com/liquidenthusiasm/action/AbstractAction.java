@@ -1,7 +1,6 @@
 package com.liquidenthusiasm.action;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -10,8 +9,12 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.liquidenthusiasm.action.story.StoryChoice;
-import com.liquidenthusiasm.domain.*;
-import com.liquidenthusiasm.story.StoryGenerator;
+import com.liquidenthusiasm.action.function.StoryFunctionRepo;
+import com.liquidenthusiasm.domain.Coven;
+import com.liquidenthusiasm.domain.Person;
+import com.liquidenthusiasm.domain.StoryInstance;
+import com.liquidenthusiasm.domain.StoryView;
+import com.liquidenthusiasm.action.story.StoryGenerator;
 
 public abstract class AbstractAction implements StoryGenerator {
 
@@ -54,43 +57,33 @@ public abstract class AbstractAction implements StoryGenerator {
         return actionDescription;
     }
 
-    @Override public StoryInstance getOrGenerateStoryInstance(Coven coven) {
+    @Override public StoryInstance getOrGenerateStoryInstance(StoryFunctionRepo storyFunctionRepo, Coven coven, Person person) {
         StoryInstance running = coven.getRunningStory(getActionId());
         if (running == null) {
             log.info("Creating new story instance for covenId={}, actionId={}", coven.getId(), getActionId());
             running = new StoryInstance();
-            running.setState(new HashMap<>());
             running.setPersonId(0);
             running.setCovenId(coven.getId());
             running.setActionId(this.getActionId());
             running.setStoryPosition(0);
-            initializeStory(running);
+            initializeStory(storyFunctionRepo, coven, person, running);
             coven.saveStory(running);
         }
         return running;
     }
 
-    @Override public StoryInstance getOrGenerateStoryInstance(Coven coven, Person person) {
-        //        StoryInstance running = Person.getRunningStory(getActionId());
-        //        return running;
-        return null;
-    }
-
-    @Override public StoryView getStoryView(StoryInstance instance) {
+    @Override public StoryView getStoryView(StoryInstance instance, Coven coven, Person person) {
         StoryView view = new StoryView();
         view.setActionId(instance.getActionId());
         view.setCovenId(instance.getCovenId());
         view.setPersonId(instance.getPersonId());
-        generateStoryTextAndOptions(view, instance);
+        view.setFlash(instance.getFlash());
+        generateStoryTextAndOptions(view, instance, coven, person);
         return view;
     }
 
     @Override public boolean isValidChoice(StoryInstance instance, StoryChoice choice) {
         return choice != null;
-    }
-
-    public StoryInstance startStory(Coven coven, Person person) {
-        return getOrGenerateStoryInstance(coven, person);
     }
 
     public static String story(String filename, Map<String, Object> state) {

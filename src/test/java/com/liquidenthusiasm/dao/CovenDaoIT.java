@@ -79,35 +79,6 @@ public class CovenDaoIT extends AbstractDaoTest {
     }
 
     @Test
-    public void canSetIntProperty() {
-        dao.updateIntProperty(covenId, "myProp", 30);
-        int val = dao.getIntProperty(covenId, "myProp");
-        assertThat(val).isEqualTo(30);
-    }
-
-    @Test
-    public void canUpdateIntProperty() {
-        dao.updateIntProperty(covenId, "myProp", 30);
-        int val = dao.getIntProperty(covenId, "myProp");
-        assertThat(val).isEqualTo(30);
-
-        dao.updateIntProperty(covenId, "myProp", 42);
-        val = dao.getIntProperty(covenId, "myProp");
-        assertThat(val).isEqualTo(42);
-    }
-
-    @Test
-    public void canDeleteIntProperty() {
-        dao.updateIntProperty(covenId, "myProp", 30);
-        int val = dao.getIntProperty(covenId, "myProp");
-        assertThat(val).isEqualTo(30);
-
-        dao.deleteIntProperty(covenId, "myProp");
-        val = dao.getIntProperty(covenId, "myProp");
-        assertThat(val).isEqualTo(0);
-    }
-
-    @Test
     public void canFindStoryByPerson() {
         StoryInstance story = FixtureTestUtil.loadFixture("fixtures/storyInstance.json", StoryInstance.class);
         dao.saveRunningStory(story);
@@ -120,7 +91,7 @@ public class CovenDaoIT extends AbstractDaoTest {
         StoryInstance story = FixtureTestUtil.loadFixture("fixtures/storyInstance.json", StoryInstance.class);
         story.setPersonId(0);
         dao.saveRunningStory(story);
-        StoryInstance retrieved = dao.findRunningStory(covenId, actionId);
+        StoryInstance retrieved = dao.findRunningStory(covenId, 0, actionId);
         assertThat(retrieved).isEqualToComparingFieldByField(story);
     }
 

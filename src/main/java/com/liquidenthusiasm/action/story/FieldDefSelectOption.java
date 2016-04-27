@@ -1,8 +1,18 @@
 package com.liquidenthusiasm.action.story;
 
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@JsonSerialize(using = FieldDefSelectOption.Serializer.class)
 public class FieldDefSelectOption {
 
     private static final Logger log = LoggerFactory.getLogger(FieldDefSelectOption.class);
@@ -11,6 +21,7 @@ public class FieldDefSelectOption {
 
     private String value;
 
+    @JsonCreator
     public static FieldDefSelectOption from(String mappingStr) {
         String[] bits = mappingStr.split("->");
         if (bits.length != 2) {
@@ -36,5 +47,16 @@ public class FieldDefSelectOption {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public static class Serializer extends JsonSerializer<FieldDefSelectOption> {
+
+        @Override
+        public void serialize(FieldDefSelectOption so, JsonGenerator jsonGenerator,
+            SerializerProvider serializerProvider)
+            throws IOException, JsonProcessingException {
+            jsonGenerator.writeString(
+                String.format("%s->%s", so.getLabel(), so.getValue()));
+        }
     }
 }

@@ -3,8 +3,10 @@ package com.liquidenthusiasm;
 import org.skife.jdbi.v2.DBI;
 
 import com.liquidenthusiasm.action.ActionRepo;
+import com.liquidenthusiasm.action.function.StoryFunctionRepo;
 import com.liquidenthusiasm.auth.CovenAuthenticator;
 import com.liquidenthusiasm.dao.CovenDao;
+import com.liquidenthusiasm.dao.PropertyDao;
 import com.liquidenthusiasm.domain.Coven;
 import com.liquidenthusiasm.resources.AvailableActionsResource;
 import com.liquidenthusiasm.resources.CovenResource;
@@ -64,6 +66,7 @@ public class CovenApplication extends Application<CovenConfiguration> {
         factory = new DBIFactory();
         jdbi = factory.build(environment, config.getDataSourceFactory(), "db");
         final CovenDao covenDao = jdbi.onDemand(CovenDao.class);
+        final PropertyDao propertyDao = jdbi.onDemand(PropertyDao.class);
 
         // Authentication
         CovenAuthenticator auth = new CovenAuthenticator(covenDao);
@@ -79,11 +82,20 @@ public class CovenApplication extends Application<CovenConfiguration> {
 
         // Actions
         addActions();
+        StoryFunctionRepo storyFunctionRepo = buildStoryFunctionRepo();
 
         // Resources
+        Coven.covenDao = covenDao;
+        Coven.propertyDao = propertyDao;
+        
+        
         environment.jersey().register(new CovenResource(covenDao));
-        environment.jersey().register(new AvailableActionsResource(actionRepo));
+        environment.jersey().register(new AvailableActionsResource(actionRepo, storyFunctionRepo));
         environment.jersey().register(new LogoutResource());
+    }
+
+    private StoryFunctionRepo buildStoryFunctionRepo() {
+        return new StoryFunctionRepo();
     }
 
     private void addActions() {

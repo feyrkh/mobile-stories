@@ -28,22 +28,7 @@ public interface CovenDao {
 
     @SqlQuery("select * from covens where name=:name") Coven findByName(@Bind("name") String name);
 
-    @SqlUpdate("merge into covenIntProperties "
-        + "( name,  covenId,  propVal) values "
-        + "(:name, :covenId, :propVal)") void updateIntProperty(@Bind("covenId") long covenId,
-        @Bind("name") String name, @Bind("propVal") int propVal);
-
-    @SqlQuery("select propVal from covenIntProperties where covenId=:covenId AND name=:name") int getIntProperty(
-        @Bind("covenId") long covenId,
-        @Bind("name") String name);
-
-    @SqlUpdate("delete from covenIntProperties where covenId=:covenId AND name=:name") void deleteIntProperty(@Bind("covenId") long covenId,
-        @Bind("name") String name);
-
     @SqlQuery("select * from stories where covenId=:covenId AND personId=:personId AND actionId=:actionId") StoryInstance findRunningStory(
         @Bind("covenId") long covenId, @Bind("personId") long personId, @Bind("actionId") long actionId);
-
-    @SqlQuery("select * from stories where covenId=:covenId AND personId=0 AND actionId=:actionId") StoryInstance findRunningStory(
-        @Bind("covenId") long covenId, @Bind("actionId") long actionId);
 
 }

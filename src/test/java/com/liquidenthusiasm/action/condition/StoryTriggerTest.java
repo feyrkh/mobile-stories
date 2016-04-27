@@ -18,7 +18,7 @@ public class StoryTriggerTest {
 
     @Test
     public void canDeserialize() throws IOException {
-        String json = "{\"conditions\":\"ci_Living Space > 0 & ci_Members <= 0\"}";
+        String json = "{\"conditions\":[\"ci_Living Space>0\",\"ci_Members<=0\"]}";
         ObjectMapper mapper = new ObjectMapper();
         StoryTrigger deser = mapper.readValue(json, StoryTrigger.class);
         assertNotNull(deser);
@@ -32,6 +32,9 @@ public class StoryTriggerTest {
         assertEquals(TriggerConditionOperator.LTE, triggers[1].getOp());
         assertEquals(0, triggers[1].getIntValue());
         assertEquals(null, triggers[1].getStrValue());
+
+        String serialized = mapper.writeValueAsString(deser);
+        assertEquals(serialized, json);
     }
 
 }

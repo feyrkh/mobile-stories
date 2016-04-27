@@ -42,22 +42,53 @@
 
         <addPrimaryKey tableName="stories" columnNames="covenId, personId, actionId"/>
 
-        <createTable tableName="covenIntProperties">
+        <createTable tableName="intProperties">
             <column name="name" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="covenId" type="bigint">
                 <constraints nullable="false"/>
             </column>
+            <column name="personId" type="bigint">
+                <constraints nullable="false"/>
+            </column>
             <column name="propVal" type="int"/>
         </createTable>
 
-        <addPrimaryKey tableName="covenIntProperties" columnNames="name, covenId"/>
+        <addPrimaryKey tableName="intProperties" columnNames="name, covenId, personId"/>
 
-        <createIndex tableName="covenIntProperties" indexName="covenIntProperties_covenId">
+        <createIndex tableName="intProperties" indexName="intProperties_covenId">
             <column name="covenId" type="bigint"></column>
         </createIndex>
-        <createIndex tableName="covenIntProperties" indexName="covenIntProperties_name">
+        <createIndex tableName="intProperties" indexName="intProperties_personId">
+            <column name="personId" type="bigint"></column>
+        </createIndex>
+        <createIndex tableName="intProperties" indexName="intProperties_name">
+            <column name="name" type="varchar(255)"></column>
+        </createIndex>
+
+        <createTable tableName="strProperties">
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="covenId" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="personId" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="propVal" type="varchar(255)"/>
+        </createTable>
+
+        <addPrimaryKey tableName="strProperties" columnNames="name, covenId, personId"/>
+
+        <createIndex tableName="strProperties" indexName="strProperties_covenId">
+            <column name="covenId" type="bigint"></column>
+        </createIndex>
+        <createIndex tableName="strProperties" indexName="strProperties_personId">
+            <column name="personId" type="bigint"></column>
+        </createIndex>
+        <createIndex tableName="strProperties" indexName="strProperties_name">
             <column name="name" type="varchar(255)"></column>
         </createIndex>
     </changeSet>

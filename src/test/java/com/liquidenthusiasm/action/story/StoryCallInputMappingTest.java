@@ -16,7 +16,6 @@ public class StoryCallInputMappingTest {
         StoryCallInputMapping input = StoryCallInputMapping.from("ss_name->studentName");
         assertEquals("ss_name", input.getContextVarName());
         assertEquals("studentName", input.getFunctionVarName());
-
     }
 
     @Test

@@ -14,6 +14,7 @@ import com.google.common.collect.ImmutableList;
 import com.liquidenthusiasm.BCryptUtil;
 import com.liquidenthusiasm.dao.CovenDao;
 import com.liquidenthusiasm.domain.Coven;
+import com.liquidenthusiasm.domain.Person;
 import io.dropwizard.auth.Auth;
 
 @Path("/coven")
@@ -26,7 +27,6 @@ public class CovenResource {
 
     public CovenResource(CovenDao covenDao) {
         this.covenDao = covenDao;
-        Coven.covenDao = covenDao;
     }
 
     public CovenDao getCovenDao() {

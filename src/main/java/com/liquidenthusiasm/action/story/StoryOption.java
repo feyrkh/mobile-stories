@@ -13,8 +13,6 @@ public class StoryOption {
 
     private FieldDef[] fields;
 
-    private StoryCall[] preSubmitCalls;
-
     private StoryCall[] postSubmitCalls;
 
     private StateTransition[] transitions;
@@ -33,14 +31,6 @@ public class StoryOption {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public StoryCall[] getPreSubmitCalls() {
-        return preSubmitCalls;
-    }
-
-    public void setPreSubmitCalls(StoryCall[] preSubmitCalls) {
-        this.preSubmitCalls = preSubmitCalls;
     }
 
     public StoryCall[] getPostSubmitCalls() {

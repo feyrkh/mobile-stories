@@ -32,6 +32,8 @@ public class StoryInstance {
 
     private String error;
 
+    private String flash;
+
     @JsonProperty("state")
     public String getStateJson() {
         try {
@@ -66,6 +68,22 @@ public class StoryInstance {
 
     public void setActionId(long actionId) {
         this.actionId = actionId;
+    }
+
+    public String getFlash() {
+        return flash;
+    }
+
+    public void setFlash(String flash) {
+        this.flash = flash;
+    }
+
+    public void addFlash(String msg) {
+        if (flash == null) {
+            flash = msg;
+        } else {
+            flash = String.format("%s\n%s", flash, msg);
+        }
     }
 
     public static class Mapper implements ResultSetMapper<StoryInstance> {
@@ -116,11 +134,17 @@ public class StoryInstance {
     }
 
     public StoryInstance state(String key, Object value) {
+        if (state == null) {
+            state = new HashMap<>();
+        }
         state.put(key, value);
         return this;
     }
 
     public Object state(String key) {
+        if (state == null) {
+            return null;
+        }
         return state.get(key);
     }
 

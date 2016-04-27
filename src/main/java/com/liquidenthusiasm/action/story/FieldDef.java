@@ -1,22 +1,13 @@
 package com.liquidenthusiasm.action.story;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FieldDef {
 
     private static final Logger log = LoggerFactory.getLogger(FieldDef.class);
-
-    public FieldDefSelectOption[] getOptions() {
-        return options;
-    }
-
-    public void setOptions(String[] options) {
-        this.options = new FieldDefSelectOption[options.length];
-        for (int i = 0; i < options.length; i++) {
-            this.options[i] = FieldDefSelectOption.from(options[i]);
-        }
-    }
 
     public enum FieldType {text, select}
 
@@ -28,11 +19,9 @@ public class FieldDef {
 
     private String defaultValue;
 
-    private int minLength;
-
-    private int maxLength;
-
     private FieldDefSelectOption[] options;
+
+    private Map<String, Object> validation;
 
     public static FieldDef text(String label, String name) {
         FieldDef fd = new FieldDef();
@@ -58,11 +47,6 @@ public class FieldDef {
         return type;
     }
 
-    public FieldDef maxLength(int len) {
-        maxLength = len;
-        return this;
-    }
-
     public String getName() {
         return name;
     }
@@ -79,19 +63,19 @@ public class FieldDef {
         this.defaultValue = defaultValue;
     }
 
-    public int getMinLength() {
-        return minLength;
+    public FieldDefSelectOption[] getOptions() {
+        return options;
     }
 
-    public void setMinLength(int minLength) {
-        this.minLength = minLength;
+    public void setOptions(FieldDefSelectOption[] options) {
+        this.options = options;
     }
 
-    public int getMaxLength() {
-        return maxLength;
+    public Map<String, Object> getValidation() {
+        return validation;
     }
 
-    public void setMaxLength(int maxLength) {
-        this.maxLength = maxLength;
+    public void setValidation(Map<String, Object> validation) {
+        this.validation = validation;
     }
 }

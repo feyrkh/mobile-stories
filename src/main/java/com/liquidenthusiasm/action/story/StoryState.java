@@ -7,6 +7,7 @@ public class StoryState {
 
     private static final Logger log = LoggerFactory.getLogger(StoryState.class);
 
+
     private int id;
 
     private String heading;
@@ -16,6 +17,8 @@ public class StoryState {
     private int actionCost = 1;
 
     private StoryOption[] options;
+
+    private StoryCall[] preSubmitCalls;
 
     public int getId() {
         return id;
@@ -55,5 +58,13 @@ public class StoryState {
 
     public void setOptions(StoryOption[] options) {
         this.options = options;
+    }
+
+    public StoryCall[] getPreSubmitCalls() {
+        return preSubmitCalls;
+    }
+
+    public void setPreSubmitCalls(StoryCall[] preSubmitCalls) {
+        this.preSubmitCalls = preSubmitCalls;
     }
 }

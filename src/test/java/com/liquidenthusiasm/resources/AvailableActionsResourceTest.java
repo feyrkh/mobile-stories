@@ -12,7 +12,11 @@ import com.liquidenthusiasm.action.AbstractAction;
 import com.liquidenthusiasm.action.ActionCategory;
 import com.liquidenthusiasm.action.ActionRepo;
 import com.liquidenthusiasm.action.story.StoryChoice;
-import com.liquidenthusiasm.domain.*;
+import com.liquidenthusiasm.action.function.StoryFunctionRepo;
+import com.liquidenthusiasm.domain.Coven;
+import com.liquidenthusiasm.domain.Person;
+import com.liquidenthusiasm.domain.StoryInstance;
+import com.liquidenthusiasm.domain.StoryView;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -29,6 +33,8 @@ public class AvailableActionsResourceTest {
 
     AbstractAction undoableAction;
 
+    StoryFunctionRepo functionRepo;
+
     private Coven coven;
 
     @Before
@@ -43,7 +49,8 @@ public class AvailableActionsResourceTest {
         when(actionRepo.getCovenActions(any(Coven.class), any(ActionCategory.class))).thenReturn(Lists.newArrayList(doableAction));
         when(actionRepo.getCovenAction(1)).thenReturn(doableAction);
         when(actionRepo.getCovenAction(2)).thenReturn(undoableAction);
-        rsrc = new AvailableActionsResource(actionRepo);
+        functionRepo = mock(StoryFunctionRepo.class);
+        rsrc = new AvailableActionsResource(actionRepo, functionRepo);
     }
 
     private AbstractAction getCovenAction(boolean canTakeAction) {
@@ -104,6 +111,6 @@ public class AvailableActionsResourceTest {
         when(coven.getRunningStory(doableAction.getActionId())).thenReturn(storyInstance);
         Response response = rsrc.chooseOption(coven, doableAction.getActionId(), choice);
         assertEquals(200, response.getStatus());
-        verify(doableAction).advanceStory(coven, storyInstance, choice);
+        verify(doableAction).advanceStory(functionRepo, coven, null, storyInstance, choice);
     }
 }

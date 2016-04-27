@@ -1,0 +1,61 @@
+{
+  "id": 0,
+  "heading": "Accept new students",
+  "text": "Your office is flooded with letters from prospective students. All you need do is send acceptance letters.",
+  "preSubmitCalls": [
+    {
+      "function": "randomPersonName"
+    }
+  ],
+  "options": [
+    {
+      "heading": "Send an acceptance letter",
+      "fields": [
+        {
+          "name": "ss_name",
+          "label": "Name",
+          "type": "text",
+          "defaultValue": "{{ss_randomPersonName}}",
+          "validation": {
+            "minLength": 2,
+            "maxLength": 30
+          }
+        },
+        {
+          "name": "ss_focus",
+          "label": "Focus",
+          "type": "select",
+          "defaultValue": "exper",
+          "options": [
+            "Experimentation->experimentation",
+            "Administration->administration"
+          ]
+        }
+      ],
+      "postSubmitCalls": [
+        {
+          "function": "registerStudent",
+          "inputs": [
+            "{{ss_name}}->studentName",
+            "{{ss_focus}}->studentFocus"
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "target": 0,
+          "triggers": ["si_registerStudent<1"]
+        },
+        {
+          "target": 1
+        }
+      ]
+    },
+    {
+      "heading": "On second thought, perhaps not...",
+      "transitions": [
+        {"target": 2}
+      ]
+    }
+  ]
+}

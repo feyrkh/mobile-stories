@@ -13,8 +13,9 @@ import org.slf4j.LoggerFactory;
 import com.liquidenthusiasm.action.AbstractAction;
 import com.liquidenthusiasm.action.ActionCategory;
 import com.liquidenthusiasm.action.ActionRepo;
-import com.liquidenthusiasm.domain.Coven;
 import com.liquidenthusiasm.action.story.StoryChoice;
+import com.liquidenthusiasm.action.function.StoryFunctionRepo;
+import com.liquidenthusiasm.domain.Coven;
 import com.liquidenthusiasm.domain.StoryInstance;
 import com.liquidenthusiasm.domain.StoryView;
 import io.dropwizard.auth.Auth;
@@ -27,8 +28,11 @@ public class AvailableActionsResource {
 
     private final ActionRepo actionRepo;
 
-    public AvailableActionsResource(ActionRepo actionRepo) {
+    private final StoryFunctionRepo functionRepo;
+
+    public AvailableActionsResource(ActionRepo actionRepo, StoryFunctionRepo functionRepo) {
         this.actionRepo = actionRepo;
+        this.functionRepo = functionRepo;
     }
 
     @GET
@@ -49,8 +53,8 @@ public class AvailableActionsResource {
             log.error("actionId={} chosen which isn't valid for covenId={}", actionId, coven.getId());
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        StoryInstance storyInstance = action.getOrGenerateStoryInstance(coven);
-        StoryView storyView = action.getStoryView(storyInstance);
+        StoryInstance storyInstance = action.getOrGenerateStoryInstance(functionRepo, coven, null);
+        StoryView storyView = action.getStoryView(storyInstance, coven, null);
 
         return Response.ok(storyView).build();
     }
@@ -74,8 +78,8 @@ public class AvailableActionsResource {
             log.error("Invalid choiceId={} chosen for actionId={} and covenId={}", choice.getChoiceId(), actionId, coven.getId());
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        action.advanceStory(coven, storyInstance, choice);
-        StoryView storyView = action.getStoryView(storyInstance);
+        action.advanceStory(functionRepo, coven, null, storyInstance, choice);
+        StoryView storyView = action.getStoryView(storyInstance, coven, null);
         return Response.ok(storyView).build();
     }
 }

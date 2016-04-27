@@ -1,21 +1,26 @@
 package com.liquidenthusiasm.action.condition;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.liquidenthusiasm.domain.Coven;
 import com.liquidenthusiasm.domain.Person;
+import com.liquidenthusiasm.util.VariableLookup;
 
+@JsonSerialize(using = TriggerCondition.Serializer.class)
 public class TriggerCondition {
 
     private static final Logger log = LoggerFactory.getLogger(TriggerCondition.class);
-
-    public static final int VAR_TYPE = 1;
-
-    public static final int VAR_SCOPE = 0;
 
     private String variable;
 
@@ -24,6 +29,10 @@ public class TriggerCondition {
     private int intValue;
 
     private String strValue;
+
+    public static final int VAR_TYPE = 1;
+
+    public static final int VAR_SCOPE = 0;
 
     public boolean isTriggered(Coven coven, Person person, Map<String, Object> storyState) {
         char varType = variable.charAt(VAR_TYPE);
@@ -37,33 +46,9 @@ public class TriggerCondition {
         }
     }
 
-    private int getIntProperty(Coven coven, Person person, Map<String, Object> storyState) {
-        switch (variable.charAt(VAR_SCOPE)) {
-        case 'c':
-            return coven.getIntProperty(variable);
-        //case 'p': return person.getIntProperty(variable);
-        case 's':
-            return (int) storyState.get(variable);
-        default:
-            throw new RuntimeException("Unexpected variable scope in " + variable + ": " + variable.charAt(VAR_SCOPE));
-        }
-    }
-
-    private String getStrProperty(Coven coven, Person person, Map<String, Object> storyState) {
-        switch (variable.charAt(VAR_SCOPE)) {
-        //        case 'c':
-        //            return coven.getStrProperty(variable);
-        //case 'p': return person.getIntProperty(variable);
-        case 's':
-            return String.valueOf(storyState.get(variable));
-        default:
-            throw new RuntimeException("Unexpected variable scope in " + variable + ": " + variable.charAt(VAR_SCOPE));
-        }
-    }
-
     private boolean isTriggeredInt(Coven coven, Person person, Map<String, Object> storyState) {
 
-        int variableVal = getIntProperty(coven, person, storyState);
+        int variableVal = VariableLookup.getIntProperty(variable, coven, person, storyState);
 
         switch (op) {
         case LT:
@@ -84,7 +69,7 @@ public class TriggerCondition {
 
     private boolean isTriggeredStr(Coven coven, Person person, Map<String, Object> storyState) {
 
-        String variableVal = getStrProperty(coven, person, storyState);
+        String variableVal = VariableLookup.getStrProperty(variable, coven, person, storyState);
 
         switch (op) {
         case EQ:
@@ -101,6 +86,7 @@ public class TriggerCondition {
             " " + intValue;
     }
 
+    @JsonCreator
     public static TriggerCondition parse(String value) {
         value = value.trim();
         TriggerCondition retval = new TriggerCondition();
@@ -111,7 +97,7 @@ public class TriggerCondition {
         retval.variable = pieces[0];
         varValLen += pieces[0].length();
         pieces[1] = pieces[1].trim();
-        if (retval.variable.charAt(VAR_TYPE)    == 'i') {
+        if (retval.variable.charAt(VAR_TYPE) == 'i') {
             retval.intValue = Integer.parseInt(pieces[1]);
         } else {
             retval.strValue = pieces[1];
@@ -175,5 +161,16 @@ public class TriggerCondition {
 
     public void setStrValue(String strValue) {
         this.strValue = strValue;
+    }
+
+    public static class Serializer extends JsonSerializer<TriggerCondition> {
+
+        @Override
+        public void serialize(TriggerCondition tc, JsonGenerator jsonGenerator,
+            SerializerProvider serializerProvider)
+            throws IOException, JsonProcessingException {
+            jsonGenerator.writeString(
+                String.format("%s%s%s", tc.getVariable(), tc.getOp(), tc.getStrValue() == null ? tc.getIntValue() : tc.getStrValue()));
+        }
     }
 }
