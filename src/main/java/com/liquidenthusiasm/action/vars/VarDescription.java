@@ -1,5 +1,6 @@
 package com.liquidenthusiasm.action.vars;
 
+import java.nio.charset.Charset;
 import java.util.Map;
 
 import javax.validation.ValidationException;
@@ -8,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sun.rmi.rmic.newrmic.Resources;
+import com.google.common.io.Resources;
 
 public class VarDescription {
 
@@ -61,7 +62,7 @@ public class VarDescription {
         if (StringUtils.isEmpty(filename))
             filename = ASSETS_ICON_DEFAULT_PNG;
         try {
-            Resources.getText(filename);
+            Resources.toString(Resources.getResource(filename), Charset.forName("UTF-8"));
         } catch (Exception e) {
             throw new ValidationException("Icon file '" + filename + " does not exist for variable: %s");
         }

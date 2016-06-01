@@ -1,0 +1,24 @@
+*** Setting up EC2 instance for Java8+Maven
+
+* Install Maven
+sudo yum install -y apache-maven
+
+* Verify the version of Java being used is not Sun Java 8 SDK -if it is, skip to “Set JAVA_HOME for maven”
+java -version
+* Get the Sun Java 8 SDK from Oracle
+wget --no-cookies --header "Cookie: gpw_e24=xxx; oraclelicense=accept-securebackup-cookie;" "http://download.oracle.com/otn-pub/java/jdk/8u11-b12/jdk-8u11-linux-x64.rpm"
+* Install Sun Java 8
+sudo rpm -i jdk-8u11-linux-x64.rpm
+* Check if the default java version is set to Sun Java 8 SDK
+java -version
+* If not then lets create one more alternative for Sun Java 8 SDK
+sudo /usr/sbin/alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_11/bin/java 20000
+* Set the Sun Java 8 SDK as the default java
+sudo /usr/sbin/alternatives --config java
+* Verify if change in SDK was done
+java -version
+
+
+* Set JAVA_HOME for maven
+export JAVA_HOME=/usr/java/jdk1.8.0_11
+
