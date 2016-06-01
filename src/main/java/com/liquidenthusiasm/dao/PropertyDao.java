@@ -16,7 +16,7 @@ public interface PropertyDao {
         + "(:name, :personId, :covenId, :propVal)") void updateIntProperty(@Bind("covenId") long covenId, @Bind("personId") long personId,
         @Bind("name") String name, @Bind("propVal") int propVal);
 
-    @SqlQuery("select propVal from intProperties where personId=:personId AND covenId=:covenId AND name=:name") int getIntProperty(
+    @SqlQuery("select propVal from intProperties where personId=:personId AND covenId=:covenId AND name=:name") Integer getIntProperty(
         @Bind("covenId") long covenId, @Bind("personId") long personId,
         @Bind("name") String name);
 

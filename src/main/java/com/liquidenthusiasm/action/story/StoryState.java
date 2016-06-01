@@ -1,12 +1,13 @@
 package com.liquidenthusiasm.action.story;
 
+import javax.validation.ValidationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class StoryState {
 
     private static final Logger log = LoggerFactory.getLogger(StoryState.class);
-
 
     private int id;
 
@@ -19,6 +20,10 @@ public class StoryState {
     private StoryOption[] options;
 
     private StoryCall[] preSubmitCalls;
+
+    private String[] statAdds;
+
+    private boolean canCancel = true;
 
     public int getId() {
         return id;
@@ -66,5 +71,25 @@ public class StoryState {
 
     public void setPreSubmitCalls(StoryCall[] preSubmitCalls) {
         this.preSubmitCalls = preSubmitCalls;
+    }
+
+    public void setCanCancel(boolean canCancel) {
+        this.canCancel = canCancel;
+    }
+
+    public boolean getCanCancel() {
+        return canCancel;
+    }
+
+    public String[] getStatAdds() {
+        return statAdds;
+    }
+
+    public void setStatAdds(String[] statAdds) {
+        this.statAdds = statAdds;
+    }
+
+    public void validate() throws ValidationException {
+
     }
 }

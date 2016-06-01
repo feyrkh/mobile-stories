@@ -71,12 +71,12 @@ public class PropertyDaoIT extends AbstractDaoTest {
     @Test
     public void canDeleteIntProperty() {
         dao.updateIntProperty(covenId, personId, "myProp", 30);
-        int val = dao.getIntProperty(covenId, personId, "myProp");
+        Integer val = dao.getIntProperty(covenId, personId, "myProp");
         assertThat(val).isEqualTo(30);
 
         dao.deleteIntProperty(covenId, personId, "myProp");
         val = dao.getIntProperty(covenId, personId, "myProp");
-        assertThat(val).isEqualTo(0);
+        assertThat(val).isEqualTo(null);
     }
 
     @Test

@@ -1,6 +1,10 @@
 package com.liquidenthusiasm.action.condition;
 
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.validation.ValidationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +36,10 @@ public class StoryTrigger {
         }
     }
 
+    @Override public String toString() {
+        return Stream.of(conditions).map(TriggerCondition::toString).collect(Collectors.joining(" & "));
+    }
+
     public TriggerCondition[] getConditions() {
         return conditions;
     }
@@ -40,9 +48,22 @@ public class StoryTrigger {
     public static StoryTrigger fromString(String andedConditions) {
         StoryTrigger st = new StoryTrigger();
         if (andedConditions != null) {
-            String[] lines = andedConditions.split("\\s*&\\s*");
+            String[] lines = andedConditions.split("\\s*&&?\\s*");
             st.setConditions(lines);
         }
         return st;
+    }
+
+    public void validate() {
+        try {
+            if (conditions != null) {
+                for (TriggerCondition condition : conditions) {
+                    condition.validate();
+                }
+
+            }
+        } catch (Exception e) {
+            throw new ValidationException("Error validating " + this, e);
+        }
     }
 }

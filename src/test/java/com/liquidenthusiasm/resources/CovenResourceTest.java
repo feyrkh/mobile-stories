@@ -10,10 +10,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.liquidenthusiasm.BCryptUtil;
-import com.liquidenthusiasm.dao.CovenDao;
+import com.liquidenthusiasm.dao.Daos;
 import com.liquidenthusiasm.dao.MockCovenDao;
 import com.liquidenthusiasm.domain.Coven;
 import com.liquidenthusiasm.domain.FixtureTestUtil;
+import com.liquidenthusiasm.util.DaosTestUtil;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -22,8 +23,6 @@ public class CovenResourceTest {
 
     private CovenResource rsrc;
 
-    private CovenDao covenDao;
-
     private Coven coven1;
 
     private Coven coven2;
@@ -31,10 +30,11 @@ public class CovenResourceTest {
     @Before
     public void setup() {
         BCryptUtil.workFactor = 6; // Speed up password encryption for tests
-        covenDao = MockCovenDao.buildMock();
-        coven1 = MockCovenDao.addMockCovenToDao(covenDao, 1, "coven1");
-        coven2 = MockCovenDao.addMockCovenToDao(covenDao, 2, "coven2");
-        rsrc = new CovenResource(covenDao);
+        DaosTestUtil.setupMockDaos();
+        Daos.covenDao = MockCovenDao.buildMock();
+        coven1 = MockCovenDao.addMockCovenToDao(Daos.covenDao, 1, "coven1");
+        coven2 = MockCovenDao.addMockCovenToDao(Daos.covenDao, 2, "coven2");
+        rsrc = new CovenResource();
     }
 
     @Test
@@ -64,7 +64,8 @@ public class CovenResourceTest {
         // ID set
         assertNotEquals(0, newCoven.getId());
         // Is inserted into the DB
-        verify(covenDao).insert(newCoven);
+        verify(Daos.covenDao).insert(newCoven);
+        verify(Daos.covenDao).update(newCoven);
     }
 
     @Test(expected = ForbiddenException.class)

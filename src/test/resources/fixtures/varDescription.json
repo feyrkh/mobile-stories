@@ -1,0 +1,8 @@
+{
+  "name": "ci_members",
+  "desc": "How many individuals reside in your covenant.",
+  "label": "Covenant Members",
+  "image": "assets/icon/ci_members.png",
+  "hideStoryOption": false,
+  "hideChanges": false
+}

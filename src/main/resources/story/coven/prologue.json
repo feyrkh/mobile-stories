@@ -1,0 +1,445 @@
+{
+  "actionCategory": "World",
+  "actionId": 0,
+  "actionName": "Prologue",
+  "actionDescription": "Striking out to prepare your atelier!",
+  "viewTriggers": [
+    {
+      "conditions": [
+        "ci_members<=10",
+        "ci_living_space<=10"
+      ]
+    }
+  ],
+  "filename": "story/coven/prologue.json",
+  "states": [
+    {
+      "id": 0,
+      "heading": "Journey into exile",
+      "text": "The portal, shimmering like quicksilver shot through with liquid gold, opens before you. To take a step forward will end your life, birthing you into a new world. A harsh one, by all accounts, but one ripe with opportunity. With magic and adventure. New vistas to explore - physical, mental and spiritual. The possibilities are endless, terrifying, galvanizing. A harsh voice prods you forward as one of the soldiers behind you begins to lose patience. ",
+      "actionCost": 0,
+      "options": [
+        {
+          "id": 0,
+          "heading": "Remember your childhood",
+          "text": "When you were a child, your @ss_guardian used to say, \"@ss_name, you are @ss_emotion!\" You know in your heart that you will carry that with you for the rest of your life.",
+          "fields": [
+            {
+              "label": "Name",
+              "name": "ss_name",
+              "type": "text",
+              "defaultValue": "Unnamed Individual",
+              "options": null,
+              "validation": {
+                "maxLength": 32,
+                "minLength": 2
+              },
+              "width": 30
+            },
+            {
+              "label": "Guardian",
+              "name": "ss_guardian",
+              "type": "select",
+              "defaultValue": null,
+              "options": [
+                "parents->parents",
+                "mother->mother",
+                "father->father",
+                "aunt->aunt",
+                "uncle->uncle",
+                "grandmother->grandmother",
+                "grandfather->grandfather",
+                "grandparents->grandparents",
+                "guardian->guardian"
+              ],
+              "validation": null,
+              "width": null
+            },
+            {
+              "label": "Emotions",
+              "name": "ss_emotion",
+              "type": "select",
+              "defaultValue": "love",
+              "options": [
+                "loved->love",
+                "so smart->smart",
+                "worthless->worthless",
+                "funny->funny",
+                "terrifying->terrifying"
+              ],
+              "validation": {},
+              "width": 30
+            }
+          ],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "enableTriggers": [
+            {
+              "conditions": [
+                "ps_reputation=null"
+              ]
+            }
+          ],
+          "statAdds": [
+            "ps_name={{ss_name}}",
+            "ps_reputation={{ss_emotion}}"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "Reflect on your past",
+          "text": "",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "1"
+          ],
+          "enableTriggers": [
+            {
+              "conditions": [
+                "ps_past_life=null"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "Consider the events that led up to this moment",
+          "text": "",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "2"
+          ],
+          "enableTriggers": [
+            {
+              "conditions": [
+                "ps_join_cause=null"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "Contemplate your hopes for the future",
+          "text": "",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "3"
+          ],
+          "enableTriggers": [
+            {
+              "conditions": [
+                "ps_goal=null"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "Step forward",
+          "text": "Taking a deep breath, you square your shoulders and step forth into your new life.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "5"
+          ],
+          "enableTriggers": [
+            {
+              "conditions": [
+                "ps_past_life!=null",
+                "ps_join_cause!=null",
+                "ps_goal!=null",
+                "ps_reputation!=null"
+              ]
+            }
+          ]
+        }
+      ],
+      "preSubmitCalls": null,
+      "canCancel": false,
+      "statAdds": [
+      ]
+    },
+    {
+      "id": 1,
+      "heading": "Memories of your past",
+      "text": "The greatest heroes and the most despicable villains all share one thing - they were once children. The experiences of youth, the advantages and disadvantages that each individual was born or stumbled into, shape who they will become. You think back to your past, and wonder how it has prepared you for what lies ahead.",
+      "actionCost": 0,
+      "options": [
+        {
+          "id": 0,
+          "heading": "You were the sole heir to a large fortune",
+          "text": "A privileged child, born of wealthy and powerful parents. You've never wanted for anything but uncertainty.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_past_life=heir",
+            "ci_treasury+200"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "You were a mystic",
+          "text": "You steeped your soul in religions both ancient and new, in mystic traditions and psychic yearnings. Nothing ever satisfied your desire for something real, a concrete manifestation of the magic you could feel inside. Until now.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_past_life=mystic",
+            "ci_treasury+50",
+            "ci_unsorted_pamphlets+1"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "You were in academia",
+          "text": "Your life in the ivory towers of academia has honed your ability to manipulate logical structures with ease. Whether you use this to parse fact from nonsense, or to twist half-truths into manipulative lies...that's up to you.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_past_life=academic",
+            "ci_treasury+70"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "You were a bureaucrat",
+          "text": "A servant of the people...at least, that was the ideal. In practice, you've found that access to the halls of power (and to just the right form and stamp-pad) holds a power of its own.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_past_life=bureaucrat",
+            "ci_treasury+130"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "You were nobody",
+          "text": "You were the boring child of boring parents, neither rich nor poor, talented or incompetent, noticed or ignored. A tepid career you hated left you with a hunger for something colorful and new. Something magical.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_past_life=nobody",
+            "ci_treasury+100"
+          ]
+        }
+      ],
+      "preSubmitCalls": null,
+      "canCancel": false
+    },
+    {
+      "id": 2,
+      "heading": "The circumstances that led you here",
+      "text": "You think back on the path that brought you here.",
+      "actionCost": 0,
+      "options": [
+        {
+          "id": 0,
+          "heading": "Patriotic volunteer",
+          "text": "A new world awaits, and your nation needs brave volunteers to stake their claim to it. You will step through this portal for its sake, leaving the land you love so that you can help secure its position both at home and abroad.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_join_cause=patriot"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "Humanitarian",
+          "text": "The resources and discoveries to be gleaned have the potential to transform lives for the better. You're determined to ensure that this new world and the potential it embodies are used for the good of all mankind.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_join_cause=humanitarian"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "Criminal release program",
+          "text": "Desperate for warm bodies to take this one-way trip, the government is offering pardons for past crimes for those willing to put their skills to good use in the new world.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_join_cause=criminal"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "Blackmailed",
+          "text": "There's something hanging over your head, something that could destroy you and the people you love. A one-way ticket to another world is the only way to escape.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_join_cause=blackmailed"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "Bankrupt",
+          "text": "You made some bad investments, took out too many loans, and now you owe money to the wrong people. You didn't want to skip town, but it was the only way.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_join_cause=bankrupt",
+            "ci_treasury-50"
+          ]
+        }
+      ],
+      "preSubmitCalls": null,
+      "canCancel": false
+    },
+    {
+      "id": 3,
+      "heading": "Hopes for the future",
+      "text": "Regardless of how you came to be standing here, you have to think about the future. About what comes next.",
+      "actionCost": 0,
+      "options": [
+        {
+          "id": 0,
+          "heading": "Someday, somehow, you will return home!",
+          "text": "You have your reasons for leaving the world you were born in, but you know that someday you will return, regardless of what the government literature says about your odds.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_goal=return"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "You will have revenge!",
+          "text": "One day you will return home, with the power and resources to make things right. Those responsible for you being here will pay!",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_goal=revenge"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "You will build a community!",
+          "text": "Cut off from the world you left behind, there will be opportunities to build a new society, a better way of life. You want to be part of that building process.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_goal=community"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "You will gain power!",
+          "text": "You've always known you were something special, and all you need is the chance to prove it. Being thrust into a world where magic is real is just the chance you've been looking for. Soon, no one will doubt your power.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "statAdds": [
+            "ps_goal=power"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "You will build a life of luxury!",
+          "text": "The possibilities for unparalleled decadence in the new world are unprecedented! Magic will be your key to riches and luxury like no one in this world has ever known!",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": ["0"],
+          "statAdds": [
+            "ps_goal=luxury"
+          ]
+        }
+      ],
+      "preSubmitCalls": null,
+      "canCancel": false
+    },
+    {
+      "id": 4,
+      "heading": "{{ss_flash_heading}}",
+      "text": "{{ss_flash_text}}",
+      "actionCost": 0,
+      "options": [
+        {
+          "id": 0,
+          "heading": "Continue",
+          "text": "",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ]
+        }
+      ],
+      "preSubmitCalls": null,
+      "canCancel": false
+    },
+    {
+      "id": 5,
+      "heading": "Into a new world",
+      "text": "Taking a deep breath and shouldering the pack of food, materials and reference notes provided to give you your start, you step into the portal. The silvery energy is effervescent on your skin, and you feel a deep sense of unease and momentary panic as you realize that you've taken an irreversible step. The magic of the new world is seeping into your body, insinuating itself into your every cell and synapse, and according to every experiment that has been performed, you can no longer survive in your original world.\n\nIn some ways your choices are constrained - you must make a new life here or die. In others, they are limitless. You are in a world of magic, of adventure and ancient, inhuman races! If you can unlock the secrets of magic for yourself, then surely nothing is impossible.\n\nYour deal with your sponsors is that you will build a magical atelier here, a workshop where you will produce trade goods and perform research. In exchange, your sponsors will supply you with basic goods and services, and pay a 'fair market price' for anything you produce.",
+      "actionCost": 0,
+      "statAdds": [
+        "ci_living_space=1",
+        "ci_members=1",
+        "ci_treasury+50",
+        "ci_unsorted_pamphlets+2",
+        "ps_location=Atelier",
+        "ci_free_days=5",
+        "pi_time=24"
+      ],
+      "options": [
+        {
+          "id": 0,
+          "heading": "Begin your new life",
+          "text": "",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": ["-1"]
+        }
+      ],
+      "preSubmitCalls": null,
+      "canCancel": false
+    }
+  ]
+}

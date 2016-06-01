@@ -3,5 +3,6 @@
   "name": "kevinhobbs@gmail.com",
   "displayName": "Kevin's Kool Koven",
   "password": "unknown",
-  "admin": false
+  "admin": false,
+  "activeStoryId": 0
 }

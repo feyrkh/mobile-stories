@@ -15,10 +15,12 @@ public class StoryChoice {
     public StoryChoice() {
     }
 
-    public StoryChoice(int choiceId) {
+    public StoryChoice(long actionId, int choiceId) {
+        this.actionId = actionId;
         this.choiceId = choiceId;
     }
 
+    private long actionId;
     private int choiceId;
 
     public int getChoiceId() {
@@ -49,5 +51,9 @@ public class StoryChoice {
 
     public void setFormValues(Map<String, String> formValues) {
         this.formValues = formValues;
+    }
+
+    public long getActionId() {
+        return actionId;
     }
 }

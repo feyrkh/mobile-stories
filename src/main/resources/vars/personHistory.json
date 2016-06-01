@@ -1,0 +1,83 @@
+[
+  {
+    "name": "ps_goal",
+    "label": "Hopes for the Future",
+    "desc": "A life without direction is a sad thing.",
+    "valueDescriptions": {
+      "return": "one day to return",
+      "revenge": "revenge will be mine",
+      "community": "to build a new society",
+      "power": "to gain ultimate power",
+      "luxury": "to live a life of luxury"
+    }
+  },
+  {
+    "name": "ps_join_cause",
+    "label": "Circumstances of Exile",
+    "desc": "Everyone has their reasons for stepping through the portal.",
+    "valueDescriptions": {
+      "patriot": "patriotic exile",
+      "humanitarian": "humanitarian efforts",
+      "criminal": "criminal pardon",
+      "blackmailed": "victim of blackmail",
+      "bankrupt": "escaping financial ruin"
+    }
+  },
+  {
+    "name": "ps_location",
+    "hideChanges": true,
+    "hideStoryOption": true
+  },
+  {
+    "name": "ps_name",
+    "label": "Name",
+    "desc": "Your name...or at least what your friends call you."
+  },
+  {
+    "name": "ps_past_life",
+    "label": "Old Life",
+    "desc": "Recollections of a time before magic.",
+    "valueDescriptions": {
+      "nobody": "nothing special",
+      "heir": "heir to a vast fortune",
+      "mystic": "steeped in mysticism",
+      "academic": "filled with academic achievement",
+      "bureaucrat": "a servant of the people"
+    }
+  },
+  {
+    "name": "ps_reputation",
+    "label": "Reputation",
+    "desc": "Perception shapes reality.",
+    "valueDescriptions": {
+      "love": "You are loved!",
+      "smart": "Your intellectual prowess is acknowledged!",
+      "worthless": "You are unredeemable!",
+      "funny": "You are a delight!",
+      "terrifying": "You are feared!"
+    }
+  },
+  {
+    "name": "pi_time",
+    "label": "Free Hours",
+    "desc": "There are only so many hours in the day.",
+    "valueDescriptions": {
+      "24": "The crack of dawn",
+      "23": "Early morning",
+      "22": "Early morning",
+      "21": "Morning",
+      "20": "Morning",
+      "19": "Late morning",
+      "18": "Noon",
+      "17": "Early afternoon",
+      "16": "Early afternoon",
+      "15": "Afternoon",
+      "14": "Afternoon",
+      "13": "Afternoon",
+      "12": "Late afternoon",
+      "11": "Late afternoon",
+      "10": "Dusk",
+      "9": "Sunset"
+    }
+  }
+]

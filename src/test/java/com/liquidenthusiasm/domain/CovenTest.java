@@ -5,25 +5,17 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.liquidenthusiasm.dao.CovenDao;
-import com.liquidenthusiasm.dao.PropertyDao;
+import com.liquidenthusiasm.dao.Daos;
+import com.liquidenthusiasm.util.DaosTestUtil;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class CovenTest {
 
-    private CovenDao covenDao;
-
-    private PropertyDao propertyDao;
-
     @Before
     public void setup() {
-        covenDao = mock(CovenDao.class);
-        propertyDao = mock(PropertyDao.class);
-        Coven.covenDao = covenDao;
-        Coven.propertyDao = propertyDao;
+        DaosTestUtil.setupMockDaos();
     }
 
     @Test
@@ -33,6 +25,9 @@ public class CovenTest {
         coven.setPassword("unknown");
         coven.setName("kevinhobbs@gmail.com");
         coven.setAdmin(true);
+        coven.setActiveStoryId(32);
+        //        coven.setActiveActionCategoryId(1);
+        coven.setFocusedPersonId(333l);
         FixtureTestUtil.verifyAgainstFixture("fixtures/coven.json", Coven.class, coven);
         System.out.println(coven);
     }
@@ -46,9 +41,9 @@ public class CovenTest {
     }
 
     @Test
-    public void missingIntPropertyIsZero() {
+    public void missingIntPropertyIsNull() {
         final Coven coven = FixtureTestUtil.loadFixture("fixtures/coven.json", Coven.class);
-        assertEquals("Missing prop", 0, coven.getIntProperty("missing"));
+        assertEquals("Missing prop", null, coven.getIntProperty("missing"));
     }
 
     @Test
@@ -56,7 +51,7 @@ public class CovenTest {
         final Coven coven = FixtureTestUtil.loadFixture("fixtures/coven.json", Coven.class);
         coven.setId(3);
         coven.setIntProperty("prop", 42);
-        verify(propertyDao).updateIntProperty(coven.getId(), 0, "prop", 42);
+        verify(Daos.propertyDao).updateIntProperty(coven.getId(), 0, "prop", 42);
     }
 
     @Test
@@ -64,7 +59,7 @@ public class CovenTest {
         final Coven coven = FixtureTestUtil.loadFixture("fixtures/coven.json", Coven.class);
         coven.setId(3);
         coven.setIntProperty("prop", 0);
-        verify(propertyDao).deleteIntProperty(coven.getId(), 0, "prop");
+        verify(Daos.propertyDao).deleteIntProperty(coven.getId(), 0, "prop");
     }
 
     @Test
@@ -72,15 +67,13 @@ public class CovenTest {
         final Coven coven = FixtureTestUtil.loadFixture("fixtures/coven.json", Coven.class);
         coven.setId(3);
         coven.getRunningStory(34);
-        verify(covenDao).findRunningStory(3, 0, 34);
+        verify(Daos.storyDao).findRunningStory(3, 333, 34);
     }
 
     @Test
-    public void canSaveStory() {
+    public void saveCallsDao() {
         final Coven coven = FixtureTestUtil.loadFixture("fixtures/coven.json", Coven.class);
-        coven.setId(3);
-        StoryInstance story = mock(StoryInstance.class);
-        coven.saveStory(story);
-        verify(covenDao).saveRunningStory(story);
+        coven.save();
+        verify(Daos.covenDao).update(coven);
     }
 }

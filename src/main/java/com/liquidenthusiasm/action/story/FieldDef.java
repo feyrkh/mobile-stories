@@ -2,6 +2,8 @@ package com.liquidenthusiasm.action.story;
 
 import java.util.Map;
 
+import javax.validation.ValidationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,34 @@ public class FieldDef {
     private FieldDefSelectOption[] options;
 
     private Map<String, Object> validation;
+
+    public Integer getWidth() {
+        return width;
+    }
+
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    private Integer width;
+
+    public void validate() {
+        try {
+            if (options != null) {
+                for (FieldDefSelectOption option : options) {
+                    option.validate();
+                }
+            }
+        } catch (Exception e) {
+            throw new ValidationException("Error while validating " + this, e);
+        }
+    }
+
+    @Override public String toString() {
+        return "FieldDef{" +
+            "name='" + name + '\'' +
+            '}';
+    }
 
     public static FieldDef text(String label, String name) {
         FieldDef fd = new FieldDef();

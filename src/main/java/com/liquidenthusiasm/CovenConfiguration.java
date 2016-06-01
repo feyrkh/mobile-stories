@@ -1,5 +1,7 @@
 package com.liquidenthusiasm;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -18,6 +20,8 @@ public class CovenConfiguration extends Configuration {
     @NotNull
     private CacheBuilderSpec authenticationCachePolicy;
 
+    private Map<String, Map<String, String>> viewRendererConfiguration;
+
     @JsonProperty("database")
     public void setDataSourceFactory(DataSourceFactory factory) {
         this.database = factory;
@@ -30,5 +34,13 @@ public class CovenConfiguration extends Configuration {
 
     public CacheBuilder<Object, Object> getAuthenticationCachePolicy() {
         return CacheBuilder.from(authenticationCachePolicy);
+    }
+
+    public Map<String, Map<String, String>> getViewRendererConfiguration() {
+        return viewRendererConfiguration;
+    }
+
+    public void setViewRendererConfiguration(Map<String, Map<String, String>> viewRendererConfiguration) {
+        this.viewRendererConfiguration = viewRendererConfiguration;
     }
 }

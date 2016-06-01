@@ -1,0 +1,20 @@
+[
+  {
+    "name": "ci_library_evocation",
+    "desc": "The evocation section of your library deals with flashy magic, spoken words modified by simple gestures to produce simple elemental effects.",
+    "label": "Evocation Library",
+    "valueDescriptions": {
+      "0": "Bare shelves - your library is empty",
+      "1": "A bare handful of pamphlets on the existence of elemental vibrations",
+      "2": "Pamphlets covering the interaction of aural emissions with elemental vibratory ribbons",
+      "3": "Pamphlets covering the interaction of aural emissions with elemental vibratory ribbons",
+      "4": "Hand-bound notebooks discussing the digital manipulation of elemental vibratory ribbons",
+      "5": "Books and commentaries on the weaving of elemental vibratory ribbons using duomanual techniques",
+      "6": "Books and commentaries on the weaving of elemental vibratory ribbons using duomanual techniques",
+      "7": "Tomes and cross-references hinting at anchoring elemental ribbons to achieve permanent effects",
+      "8": "Tomes and cross-references hinting at anchoring elemental ribbons to achieve permanent effects",
+      "9": "An incredible collection of reference material, containing nearly everything you could want to know about the science of evocation",
+      "10": "Unparalleled! The secrets you've hoarded here represent a curriculum that could make an archmage out of the most fumble-fingered and tone-deaf student imaginable"
+    }
+  }
+]

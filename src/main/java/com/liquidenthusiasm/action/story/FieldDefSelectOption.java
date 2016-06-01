@@ -2,6 +2,9 @@ package com.liquidenthusiasm.action.story;
 
 import java.io.IOException;
 
+import javax.validation.ValidationException;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +26,9 @@ public class FieldDefSelectOption {
 
     @JsonCreator
     public static FieldDefSelectOption from(String mappingStr) {
-        String[] bits = mappingStr.split("->");
+        String[] bits = mappingStr.split("->", 2);
         if (bits.length != 2) {
-            throw new RuntimeException("Invalid StoryCallInputMapping string: " + mappingStr);
+            bits = new String[] { mappingStr, mappingStr };
         }
         FieldDefSelectOption mapping = new FieldDefSelectOption();
         mapping.setLabel(bits[0].trim());
@@ -34,6 +37,8 @@ public class FieldDefSelectOption {
     }
 
     public String getLabel() {
+        if (label == null)
+            return value;
         return label;
     }
 
@@ -42,11 +47,18 @@ public class FieldDefSelectOption {
     }
 
     public String getValue() {
+        if (value == null)
+            return label;
         return value;
     }
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public void validate() {
+        if (StringUtils.isEmpty(label) && StringUtils.isEmpty(value))
+            throw new ValidationException("Value and label must not both be blank: " + this);
     }
 
     public static class Serializer extends JsonSerializer<FieldDefSelectOption> {

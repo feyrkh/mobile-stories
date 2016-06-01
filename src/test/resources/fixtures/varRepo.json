@@ -1,0 +1,20 @@
+[
+  {
+    "name": "ci_living_space",
+    "desc": "Research and magery requires elbow room - space for crystals, gardens, braziers and skulls. And perhaps a bed or two.",
+    "label": "Living Space"
+  },
+  {
+    "name": "ci_members",
+    "desc": "How many heads do you see around the dinner table?",
+    "label": "Covenant Members",
+    "image": "assets/icon/ci_members.png",
+    "hideStoryOption": false,
+    "hideChanges": false
+  },
+  {
+    "name": "ci_treasury",
+    "desc": "Gold! Silver! Precious gems! ...and stranger things.",
+    "label": "Treasury"
+  }
+]

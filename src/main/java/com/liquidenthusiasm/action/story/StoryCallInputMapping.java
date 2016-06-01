@@ -21,13 +21,13 @@ public class StoryCallInputMapping {
     private String functionVarName;
 
     public static StoryCallInputMapping from(String mappingStr) {
-        String[] bits = mappingStr.split("->");
+        String[] bits = mappingStr.split("=", 2);
         if (bits.length != 2) {
-            throw new RuntimeException("Invalid StoryCallInputMapping string: " + mappingStr);
+            throw new RuntimeException("Invalid StoryCallInputMapping string: '" + mappingStr + "'");
         }
         StoryCallInputMapping mapping = new StoryCallInputMapping();
-        mapping.setContextVarName(bits[0].trim());
-        mapping.setFunctionVarName(bits[1].trim());
+        mapping.setContextVarName(bits[1].trim());
+        mapping.setFunctionVarName(bits[0].trim());
         return mapping;
     }
 
@@ -53,7 +53,7 @@ public class StoryCallInputMapping {
         public void serialize(StoryCallInputMapping storyCallInputMapping, JsonGenerator jsonGenerator,
             SerializerProvider serializerProvider)
             throws IOException, JsonProcessingException {
-            jsonGenerator.writeString(String.format("%s->%s", storyCallInputMapping.contextVarName, storyCallInputMapping.functionVarName));
+            jsonGenerator.writeString(String.format("%s=%s", storyCallInputMapping.functionVarName, storyCallInputMapping.contextVarName));
         }
     }
 }

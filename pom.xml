@@ -31,7 +31,17 @@
         </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-assets</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-auth</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-views-freemarker</artifactId>
             <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
@@ -51,7 +61,11 @@
             <artifactId>dropwizard-elasticsearch</artifactId>
             <version>0.9.1-1</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.googlecode.jctree</groupId>
+            <artifactId>jctree</artifactId>
+            <version>2.0.1</version>
+        </dependency>
 
         <dependency>
             <groupId>jbcrypt</groupId>

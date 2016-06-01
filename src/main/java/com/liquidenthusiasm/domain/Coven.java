@@ -11,8 +11,8 @@ import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.liquidenthusiasm.dao.CovenDao;
-import com.liquidenthusiasm.dao.PropertyDao;
+import com.google.common.collect.ImmutableList;
+import com.liquidenthusiasm.dao.Daos;
 
 public class Coven implements Principal, Sanitizable, Serializable {
 
@@ -20,9 +20,7 @@ public class Coven implements Principal, Sanitizable, Serializable {
 
     public static final String INT_PROP_MEMBERS = "Coven:Members";
 
-    public static CovenDao covenDao;
-
-    public static PropertyDao propertyDao;
+    public static final int NO_FOCUSED_PERSON = 0;
 
     private long id;
 
@@ -36,6 +34,11 @@ public class Coven implements Principal, Sanitizable, Serializable {
     private boolean admin;
 
     private long activeStoryId = -1;
+
+    private long focusedPersonId = NO_FOCUSED_PERSON;
+
+    @JsonIgnore
+    private ImmutableList<Person> members;
 
     public Coven() {
     }
@@ -80,37 +83,50 @@ public class Coven implements Principal, Sanitizable, Serializable {
     @JsonIgnore
     public void setIntProperty(String propName, int propVal) {
         if (propVal == 0) {
-            propertyDao.deleteIntProperty(id, 0, propName);
+            Daos.propertyDao.deleteIntProperty(id, 0, propName);
         } else {
-            propertyDao.updateIntProperty(id, 0, propName, propVal);
+            Daos.propertyDao.updateIntProperty(id, 0, propName, propVal);
         }
     }
 
     @JsonIgnore
-    public int getIntProperty(String propName) {
-        return propertyDao.getIntProperty(id, 0, propName);
+    public Integer getIntProperty(String propName) {
+        switch (propName) {
+        case "ci_admin":
+            return isAdmin() ? 1 : 0;
+        }
+        return Daos.propertyDao.getIntProperty(id, 0, propName);
     }
 
     @JsonIgnore
     public void setStrProperty(String propName, String propVal) {
         if (StringUtils.isEmpty(propVal)) {
-            propertyDao.deleteStrProperty(id, 0, propName);
+            Daos.propertyDao.deleteStrProperty(id, 0, propName);
         } else {
-            propertyDao.updateStrProperty(id, 0, propName, propVal);
+            Daos.propertyDao.updateStrProperty(id, 0, propName, propVal);
         }
     }
 
     @JsonIgnore
     public String getStrProperty(String propName) {
-        return propertyDao.getStrProperty(id, 0, propName);
+        return Daos.propertyDao.getStrProperty(id, 0, propName);
     }
 
     public StoryInstance getRunningStory(long actionId) {
-        return covenDao.findRunningStory(getId(), 0, actionId);
+        return Daos.storyDao.findRunningStory(getId(), focusedPersonId, actionId);
     }
 
-    public void saveStory(StoryInstance storyInstance) {
-        covenDao.saveRunningStory(storyInstance);
+    public long getFocusedPersonId() {
+        return focusedPersonId;
+    }
+
+    public void save() {
+        Daos.covenDao.update(this);
+    }
+
+    @JsonIgnore
+    public Person getFocusedPerson() {
+        return Daos.personDao.findById(focusedPersonId);
     }
 
     public static class Mapper implements ResultSetMapper<Coven> {
@@ -123,6 +139,7 @@ public class Coven implements Principal, Sanitizable, Serializable {
             c.setPassword(r.getString("password"));
             c.setAdmin(r.getBoolean("admin"));
             c.setActiveStoryId(r.getLong("activeStoryId"));
+            c.setFocusedPersonId(r.getLong("focusedPersonId"));
             return c;
         }
     }
@@ -149,5 +166,19 @@ public class Coven implements Principal, Sanitizable, Serializable {
 
     public void setActiveStoryId(long activeStoryId) {
         this.activeStoryId = activeStoryId;
+    }
+
+    public void setFocusedPersonId(long focusedPersonId) {
+        this.focusedPersonId = focusedPersonId;
+    }
+
+    public void addMember(Person member) {
+        members = null;
+    }
+
+    @JsonIgnore
+    public ImmutableList<Person> getMembers() {
+        members = Daos.personDao.listByCovenId(getId());
+        return members;
     }
 }

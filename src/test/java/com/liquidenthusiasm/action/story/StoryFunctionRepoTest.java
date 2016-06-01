@@ -59,12 +59,12 @@ public class StoryFunctionRepoTest {
         int covenInt = 10;
         int personInt = 999;
         StoryCallInputMapping[] inputs = new StoryCallInputMapping[6];
-        inputs[0] = StoryCallInputMapping.from("{{ss_StoryStr}}->storyStr");
-        inputs[1] = StoryCallInputMapping.from("{{si_StoryInt}}->storyInt");
-        inputs[2] = StoryCallInputMapping.from("{{cs_CovenStr}}->covenStr");
-        inputs[3] = StoryCallInputMapping.from("{{ci_CovenInt}}->covenInt");
-        inputs[4] = StoryCallInputMapping.from("{{ps_PersonStr}}->personStr");
-        inputs[5] = StoryCallInputMapping.from("{{pi_PersonInt}}->personInt");
+        inputs[0] = StoryCallInputMapping.from("storyStr={{ss_StoryStr}}");
+        inputs[1] = StoryCallInputMapping.from("storyInt={{si_StoryInt}}");
+        inputs[2] = StoryCallInputMapping.from("covenStr={{cs_CovenStr}}");
+        inputs[3] = StoryCallInputMapping.from("covenInt={{ci_CovenInt}}");
+        inputs[4] = StoryCallInputMapping.from("personStr={{ps_PersonStr}}");
+        inputs[5] = StoryCallInputMapping.from("personInt={{pi_PersonInt}}");
 
         story.state("ss_StoryStr", "STORY_STR");
         story.state("si_StoryInt", storyInt);

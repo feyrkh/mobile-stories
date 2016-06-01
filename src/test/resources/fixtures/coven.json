@@ -2,5 +2,7 @@
   "name": "kevinhobbs@gmail.com",
   "displayName": "Kevin's Kool Koven",
   "password": "unknown",
-  "admin": true
+  "admin": true,
+  "activeStoryId": 32,
+  "focusedPersonId": 333
 }

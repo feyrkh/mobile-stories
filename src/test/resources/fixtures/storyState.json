@@ -36,25 +36,20 @@
         {
           "function": "registerStudent",
           "inputs": [
-            "{{ss_name}}->studentName",
-            "{{ss_focus}}->studentFocus"
+            "studentName={{ss_name}}",
+            "studentFocus={{ss_focus}}"
           ]
         }
       ],
       "transitions": [
-        {
-          "target": 0,
-          "triggers": ["si_registerStudent<1"]
-        },
-        {
-          "target": 1
-        }
+        "0 if si_registerStudent<1",
+        "1"
       ]
     },
     {
       "heading": "On second thought, perhaps not...",
       "transitions": [
-        {"target": 2}
+        "2"
       ]
     }
   ]

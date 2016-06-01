@@ -6,7 +6,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.liquidenthusiasm.util.VariableLookup;
+import com.liquidenthusiasm.dao.Daos;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -35,12 +35,39 @@ public class StoryViewTest {
         String original =
             "{{ss_name}} ({{si_nameInt}}) has been a {{cs_profession}} ({{ci_professionInt}}) for {{pi_age}} years. {{ps_ha}} {{ps_ha}} {{ps_ha}}!";
         setupVals("Kevin", 11, "IT guy", 9, 35, "ha");
-        String newStr = VariableLookup.interpolate(original, coven, person, story);
+        String newStr = Daos.varRepo.interpolate(original, coven, person, story);
         assertEquals("Kevin (11) has been a IT guy (9) for 35 years. ha ha ha!", newStr);
 
         setupVals("Steph", 12, "IT girl", 10, 32, "la");
-        newStr = VariableLookup.interpolate(original, coven, person, story);
+        newStr = Daos.varRepo.interpolate(original, coven, person, story);
         assertEquals("Steph (12) has been a IT girl (10) for 32 years. la la la!", newStr);
+    }
+
+    @Test
+    public void canInterpolateFlash() {
+        setupVals("Kevin", 11, "IT guy", 9, 35, "ha");
+
+        view.setFlash("Testing {{ss_name}}");
+        view.interpolateVariables(coven, person, story);
+        assertEquals("Testing Kevin", view.getFlash());
+    }
+
+    @Test
+    public void canInterpolateHeading() {
+        setupVals("Kevin", 11, "IT guy", 9, 35, "ha");
+
+        view.setHeading("Testing {{ss_name}}");
+        view.interpolateVariables(coven, person, story);
+        assertEquals("Testing Kevin", view.getHeading());
+    }
+
+    @Test
+    public void canInterpolateStoryText() {
+        setupVals("Kevin", 11, "IT guy", 9, 35, "ha");
+
+        view.setStoryText("Testing {{ss_name}}");
+        view.interpolateVariables(coven, person, story);
+        assertEquals("Testing Kevin", view.getStoryText());
     }
 
     private void setupVals(String ss_name, int si_nameInt, String cs_profession, int ci_professionInt, int pi_age, String ps_ha) {

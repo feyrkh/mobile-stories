@@ -1,0 +1,31 @@
+[
+  {
+    "name": "ci_admin",
+    "desc": "0 for normal players, 1 for administrators",
+    "label": "Admin",
+    "hideChanges": true
+  },
+  {
+    "name": "ci_free_days",
+    "desc": "The daily work of survival takes a great deal of time - cherish the few unencumbered days you have.",
+    "label": "Free Days"
+  },
+  {
+    "name": "ci_living_space",
+    "desc": "Research and magery requires elbow room - space for crystals, gardens, braziers and skulls...nd perhaps a bed or two",
+    "label": "Living Space"
+  },
+  {
+    "name": "ci_members",
+    "desc": "How many souls reside beneath your roof?",
+    "label": "Atelier Members",
+    "image": "assets/icon/ci_members.png",
+    "hideStoryOption": true,
+    "hideChanges": true
+  },
+  {
+    "name": "ci_treasury",
+    "desc": "Gold! Silver! Precious gems! ...and stranger things",
+    "label": "Treasury"
+  }
+]

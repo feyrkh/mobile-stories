@@ -1,0 +1,187 @@
+{
+  "actionCategory": "Atelier",
+  "actionId": 5,
+  "actionName": "Admin Cheats",
+  "viewTriggers": [
+    {
+      "conditions": [
+        "ci_admin>0"
+      ]
+    }
+  ],
+  "filename": "story/admin/cheats.json",
+  "states": [
+    {
+      "id": 0,
+      "heading": "Admin cheat console",
+      "text": "",
+      "actionCost": 0,
+      "options": [
+        {
+          "id": 0,
+          "heading": "Library cheats",
+          "text": "",
+          "transitions": [
+            "1"
+          ],
+          "timeCost": 0
+        },
+        {
+          "heading": "Sleep & Fatigue",
+          "text": "",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "2"
+          ],
+          "timeCost": 0
+        }
+      ],
+      "preSubmitCalls": null,
+      "statAdds": null,
+      "canCancel": true
+    },
+    {
+      "id": 1,
+      "heading": "Library",
+      "text": "",
+      "actionCost": 0,
+      "options": [
+        {
+          "id": 0,
+          "heading": "Set library to specific level",
+          "text": "New levels: @si_level",
+          "fields": [
+            {
+              "label": "Library Level",
+              "name": "si_level",
+              "type": "text",
+              "defaultValue": "0",
+              "options": null,
+              "validation": {},
+              "width": 30
+            }
+          ],
+          "postSubmitCalls": [],
+          "transitions": [
+            "1",
+            "-1"
+          ],
+          "viewTriggers": [
+            {
+              "conditions": [
+                "ci_admin>0"
+              ]
+            }
+          ],
+          "statAdds": [
+            "ci_library_evocation={{si_level}}"
+          ],
+          "timeCost": 0
+        },
+        {
+          "id": 0,
+          "heading": "Add books",
+          "text": "1 each of unsorted pamphlets, books and tomes",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "1"
+          ],
+          "viewTriggers": [
+            {
+              "conditions": [
+                "ci_admin>0"
+              ]
+            }
+          ],
+          "statAdds": [
+            "ci_unsorted_pamphlets+1",
+            "ci_unsorted_books+1",
+            "ci_unsorted_tomes+1"
+          ],
+          "timeCost": 0
+        }
+      ],
+      "preSubmitCalls": null,
+      "statAdds": null,
+      "canCancel": true
+    },
+    {
+      "id": 2,
+      "text": "",
+      "options": [
+        {
+          "heading": "Adjust time",
+          "text": "Time left today: @si_time\nFree days: @si_days",
+          "fields": [
+            {
+              "label": "Time",
+              "name": "si_time",
+              "type": "text",
+              "defaultValue": "{{pi_time}}",
+              "validation": {},
+              "width": 30
+            },
+            {
+              "label": "Atelier free days",
+              "name": "si_days",
+              "type": "text",
+              "defaultValue": "{{ci_free_days}}",
+              "validation": {},
+              "width": 30
+            }
+          ],
+          "postSubmitCalls": [],
+          "transitions": [
+            "2"
+          ],
+          "enableTriggers": [
+            {
+              "conditions": [
+                "ci_admin>0"
+              ]
+            }
+          ],
+          "timeCost": 0,
+          "statAdds": [
+            "pi_time={{si_time}}",
+            "ci_free_days={{si_days}}"
+          ]
+        },
+        {
+          "heading": "Set fatigue",
+          "text": "Phys fatigue: @si_fatigue\nMental fatigue: @si_mental",
+          "fields": [
+            {
+              "label": "Fatigue",
+              "name": "si_fatigue",
+              "type": "text",
+              "defaultValue": "{{pi_fatigue}}",
+              "validation": {},
+              "width": 30
+            },
+            {
+              "label": "Mental fatigue",
+              "name": "si_mental",
+              "type": "text",
+              "defaultValue": "{{pi_mental_fatigue}}",
+              "validation": {},
+              "width": 30
+            }
+          ],
+          "postSubmitCalls": [],
+          "transitions": [
+            "2"
+          ],
+          "statAdds": [
+            "pi_fatigue={{si_fatigue}}",
+            "pi_mental_fatigue={{si_mental}}"
+          ]
+        }
+      ],
+      "heading": "Sleep & Fatigue",
+      "canCancel": true
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "name": "ps_pronoun_she",
+    "hideStoryOption": true,
+    "hideChanges": true
+  },
+  {
+    "name": "ps_pronoun_her",
+    "hideStoryOption": true,
+    "hideChanges": true
+  },
+  {
+    "name": "ps_pronoun_hers",
+    "hideStoryOption": true,
+    "hideChanges": true
+  }
+]

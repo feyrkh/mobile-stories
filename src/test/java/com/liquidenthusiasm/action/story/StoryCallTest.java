@@ -29,7 +29,7 @@ public class StoryCallTest {
     @Test
     public void storyCallWithInputs() throws IOException {
         sc.setFunction("withInputs");
-        sc.setInputs(new String[] { "1->one" });
+        sc.setInputs(new String[] { "one=1" });
         StoryCall deser = checkSerde(sc);
         assertEquals("1", deser.getInputs()[0].getContextVarName());
         assertEquals("one", deser.getInputs()[0].getFunctionVarName());

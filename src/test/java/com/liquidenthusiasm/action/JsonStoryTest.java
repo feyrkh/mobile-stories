@@ -1,16 +1,22 @@
 package com.liquidenthusiasm.action;
 
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.liquidenthusiasm.action.function.StoryFunctionRepo;
-import com.liquidenthusiasm.action.story.*;
+import com.liquidenthusiasm.action.story.FieldDef;
+import com.liquidenthusiasm.action.story.FieldDefSelectOption;
+import com.liquidenthusiasm.action.story.JsonStory;
+import com.liquidenthusiasm.action.story.StoryChoice;
+import com.liquidenthusiasm.dao.Daos;
 import com.liquidenthusiasm.domain.*;
+import com.liquidenthusiasm.util.DaosTestUtil;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class JsonStoryTest {
 
@@ -24,8 +30,6 @@ public class JsonStoryTest {
 
     private StoryView view;
 
-    private StoryFunctionRepo storyFunctionRepo;
-
     @BeforeClass
     public static void setupStory() {
         story = FixtureTestUtil.loadFixture("fixtures/jsonStory.json", JsonStory.class);
@@ -33,8 +37,12 @@ public class JsonStoryTest {
 
     @Before
     public void setup() {
+        DaosTestUtil.setupMockDaos();
         coven = mock(Coven.class);
-        storyFunctionRepo = new StoryFunctionRepo();
+        person = mock(Person.class);
+        when(person.getTimeRemaining()).thenReturn(24);
+        StoryFunctionRepo storyFunctionRepo = new StoryFunctionRepo();
+        Daos.functionRepo = storyFunctionRepo;
         storyFunctionRepo.put("randomPersonName", (args, c, p, s) -> {
             s.state("ss_randomPersonName", "Rando Cardrissian");
 
@@ -47,17 +55,17 @@ public class JsonStoryTest {
             s.state("si_registerStudent", 1);
         });
         when(coven.getId()).thenReturn(1l);
-        instance = story.getOrGenerateStoryInstance(storyFunctionRepo, coven, null);
+        instance = story.getOrGenerateStoryInstance(coven, person);
         view = story.getStoryView(instance, coven, person);
     }
 
     @Test
     public void canDeserialize() {
         assertEquals(1, story.getActionId());
-        assertEquals(ActionCategory.CovenAdministration, story.getActionCategory());
+        assertEquals(ActionCategory.Ledgers, story.getActionCategory());
         assertEquals("Accept Students", story.getActionName());
         assertEquals("There's room for more students...perhaps we should recruit some?", story.getActionDescription());
-        assertEquals(2, story.getStoryTriggers().length);
+        assertEquals(2, story.getEnableTriggers().length);
         assertEquals(3, story.getStoryStates().length);
         FieldDef selectOption = story.getStoryStates()[0].getOptions()[0].getFields()[1];
         assertNotNull("selectOption", selectOption);
@@ -67,23 +75,30 @@ public class JsonStoryTest {
     }
 
     @Test
+    public void hasSanitizedView() {
+        Map<String, Object> sanitized = story.getCleanView();
+        assertNotNull(sanitized);
+        assertNull(sanitized.get("states"));
+    }
+
+    @Test
     public void canStartStoryBecauseLivingSpace() {
-        when(coven.getIntProperty("ci_Living Space")).thenReturn(3);
-        when(coven.getIntProperty("ci_Members")).thenReturn(3);
+        when(coven.getIntProperty("ci_living_space")).thenReturn(3);
+        when(coven.getIntProperty("ci_members")).thenReturn(3);
         assertTrue(story.canStartStory(coven, null));
     }
 
     @Test
     public void canStartStoryBecauseNoMembers() {
-        when(coven.getIntProperty("ci_Living Space")).thenReturn(0);
-        when(coven.getIntProperty("ci_Members")).thenReturn(0);
+        when(coven.getIntProperty("ci_living_space")).thenReturn(0);
+        when(coven.getIntProperty("ci_members")).thenReturn(0);
         assertTrue(story.canStartStory(coven, null));
     }
 
     @Test
     public void canNotStartStory() {
-        when(coven.getIntProperty("ci_Living Space")).thenReturn(0);
-        when(coven.getIntProperty("ci_Members")).thenReturn(3);
+        when(coven.getIntProperty("ci_living_space")).thenReturn(0);
+        when(coven.getIntProperty("ci_members")).thenReturn(3);
         assertFalse(story.canStartStory(coven, null));
     }
 
@@ -96,12 +111,13 @@ public class JsonStoryTest {
         assertEquals("Accept new students", view.getHeading());
         assertEquals("Your office is flooded with letters from prospective students. All you need do is send acceptance letters.",
             view.getStoryText());
+        verify(Daos.storyDao).saveRunningStory(instance);
     }
 
     @Test
     public void cancelImmediately() {
         assertEquals("Starting at state 0", 0, instance.getStoryPosition());
-        story.advanceStory(storyFunctionRepo, coven, null, instance, new StoryChoice(1));
+        story.advanceStory(Daos.functionRepo, coven, null, instance, new StoryChoice(instance.getActionId(), 1));
         view = story.getStoryView(instance, coven, person);
         assertEquals("Canceled, should be at state 2", 2, instance.getStoryPosition());
         assertEquals("None of them are suitable!", view.getHeading());
@@ -121,8 +137,9 @@ public class JsonStoryTest {
 
     @Test
     public void acceptStudent() {
-        story.advanceStory(storyFunctionRepo, coven, person, instance,
-            new StoryChoice(0).formValue("ss_name", "Kevin").formValue("ss_focus", "experimentation"));
+        verify(Daos.storyDao).saveRunningStory(instance);
+        story.advanceStory(Daos.functionRepo, coven, person, instance,
+            new StoryChoice(instance.getActionId(), 0).formValue("ss_name", "Kevin").formValue("ss_focus", "experimentation"));
         view = story.getStoryView(instance, coven, person);
         assertEquals("Kevin", instance.state("registeredName"));
         assertEquals("experimentation", instance.state("registeredFocus"));
@@ -136,8 +153,8 @@ public class JsonStoryTest {
 
     @Test
     public void failToAcceptStudentWithShortName() {
-        story.advanceStory(storyFunctionRepo, coven, person, instance,
-            new StoryChoice(0).formValue("ss_name", "A").formValue("ss_focus", "experimentation"));
+        story.advanceStory(Daos.functionRepo, coven, person, instance,
+            new StoryChoice(instance.getActionId(), 0).formValue("ss_name", "A").formValue("ss_focus", "experimentation"));
         assertNotNull("Instance flash should be non-null before getting view", instance.getFlash());
         assertNull("View flash should be null before getting view", view.getFlash());
         view = story.getStoryView(instance, coven, person);
@@ -152,8 +169,8 @@ public class JsonStoryTest {
 
     @Test
     public void failToAcceptStudentWithLongName() {
-        story.advanceStory(storyFunctionRepo, coven, person, instance,
-            new StoryChoice(0).formValue("ss_name", "TheVeryBadNoGoodExtraLongNameWithTooManyCharacters")
+        story.advanceStory(Daos.functionRepo, coven, person, instance,
+            new StoryChoice(instance.getActionId(), 0).formValue("ss_name", "TheVeryBadNoGoodExtraLongNameWithTooManyCharacters")
                 .formValue("ss_focus", "experimentation"));
         assertNotNull("Instance flash should be non-null before getting view", instance.getFlash());
         assertNull("View flash should be null before getting view", view.getFlash());
@@ -169,8 +186,8 @@ public class JsonStoryTest {
 
     @Test
     public void failToAcceptStudentWithInvalidFocus() {
-        story.advanceStory(storyFunctionRepo, coven, person, instance,
-            new StoryChoice(0).formValue("ss_name", "Kevin").formValue("ss_focus", "eXpErImEnTaTiOn"));
+        story.advanceStory(Daos.functionRepo, coven, person, instance,
+            new StoryChoice(instance.getActionId(), 0).formValue("ss_name", "Kevin").formValue("ss_focus", "eXpErImEnTaTiOn"));
         assertNotNull("Instance flash should be non-null before getting view", instance.getFlash());
         assertNull("View flash should be null before getting view", view.getFlash());
         view = story.getStoryView(instance, coven, person);
@@ -185,8 +202,17 @@ public class JsonStoryTest {
 
     @Test
     public void invalidChoiceDoesNotProgress() {
-        story.advanceStory(storyFunctionRepo, coven, person, instance,
-            new StoryChoice(33));
+        story.advanceStory(Daos.functionRepo, coven, person, instance,
+            new StoryChoice(instance.getActionId(), 33));
+        assertNotNull("Instance flash should be non-null before getting view", instance.getFlash());
+        assertEquals(0, instance.getStoryPosition());
+
+    }
+
+    @Test
+    public void invalidActionIdDoesNotProgress() {
+        story.advanceStory(Daos.functionRepo, coven, person, instance,
+            new StoryChoice(instance.getActionId() + 1, 1));
         assertNotNull("Instance flash should be non-null before getting view", instance.getFlash());
         assertEquals(0, instance.getStoryPosition());
 

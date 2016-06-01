@@ -11,16 +11,14 @@ import com.liquidenthusiasm.domain.StoryInstance;
 public interface CovenDao {
 
     @SqlUpdate("insert into covens "
-        + "( name,  password,  displayName,  admin,  activeStoryId) values "
-        + "(:name, :password, :displayName, :admin, :activeStoryId)")
+        + "( name,  password,  displayName,  admin,  activeStoryId,   focusedPersonId) values "
+        + "(:name, :password, :displayName, :admin, :activeStoryId,  :focusedPersonId)")
     @GetGeneratedKeys long insert(@BindBean Coven coven);
 
-    @SqlUpdate("merge into stories "
-        + "( covenId,  personId, actionId, storyPosition, stateJson) values "
-        + "(:covenId, :personId, :actionId, :storyPosition, :stateJson)") void saveRunningStory(@BindBean StoryInstance story);
-
-    @SqlUpdate("delete from stories where actionId=:actionId AND covenId=:covenId AND personId=:personId") void deleteStory(
-        @BindBean StoryInstance storyInstance);
+    @SqlUpdate("merge into covens "
+        + "( id,  name,  password,  displayName,  admin,  activeStoryId,   focusedPersonId) values "
+        + "(:id, :name, :password, :displayName, :admin, :activeStoryId,  :focusedPersonId)") void update(
+        @BindBean Coven coven);
 
     @SqlQuery("select * from covens where id=:id") Coven findById(@Bind("id") long id);
 
@@ -28,7 +26,11 @@ public interface CovenDao {
 
     @SqlQuery("select * from covens where name=:name") Coven findByName(@Bind("name") String name);
 
-    @SqlQuery("select * from stories where covenId=:covenId AND personId=:personId AND actionId=:actionId") StoryInstance findRunningStory(
-        @Bind("covenId") long covenId, @Bind("personId") long personId, @Bind("actionId") long actionId);
+    @SqlUpdate("merge into sessions "
+        + "( covenId, loginCookie) values "
+        + "(:covenId, :loginCookie)") void login(@Bind("covenId") long id, @Bind("loginCookie") String loginCookie);
+
+    @SqlQuery("select * from covens, sessions where covens.id=covenId AND sessions.loginCookie=:loginCookie") Coven findByLoginCookie(
+        @Bind("loginCookie") String loginCookie);
 
 }

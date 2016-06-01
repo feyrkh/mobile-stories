@@ -1,6 +1,7 @@
 package com.liquidenthusiasm.action;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -8,15 +9,16 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import com.liquidenthusiasm.CleanView;
 import com.liquidenthusiasm.action.story.StoryChoice;
-import com.liquidenthusiasm.action.function.StoryFunctionRepo;
+import com.liquidenthusiasm.action.story.StoryGenerator;
+import com.liquidenthusiasm.dao.Daos;
 import com.liquidenthusiasm.domain.Coven;
 import com.liquidenthusiasm.domain.Person;
 import com.liquidenthusiasm.domain.StoryInstance;
 import com.liquidenthusiasm.domain.StoryView;
-import com.liquidenthusiasm.action.story.StoryGenerator;
 
-public abstract class AbstractAction implements StoryGenerator {
+public abstract class AbstractAction implements StoryGenerator, CleanView {
 
     Logger log = LoggerFactory.getLogger(AbstractAction.class);
 
@@ -28,15 +30,28 @@ public abstract class AbstractAction implements StoryGenerator {
 
     private String actionDescription;
 
-    protected AbstractAction(long actionId, ActionCategory covenAdministration, String actionName, String actionDescription) {
+    protected AbstractAction(long actionId, ActionCategory category, String actionName, String actionDescription) {
         this.actionId = actionId;
         this.actionName = actionName;
         this.actionDescription = actionDescription;
-        this.actionCategory = covenAdministration;
+        this.actionCategory = category;
     }
 
     public AbstractAction() {
 
+    }
+
+    protected Map<String, Object> sanitizedStory;
+
+    @Override public Map<String, Object> getCleanView() {
+        if (sanitizedStory == null) {
+            sanitizedStory = new HashMap<>();
+            sanitizedStory.put("actionId", actionId);
+            sanitizedStory.put("actionName", actionName);
+            sanitizedStory.put("actionDescription", actionDescription);
+            sanitizedStory.put("actionCategory", actionCategory);
+        }
+        return sanitizedStory;
     }
 
     public abstract boolean canStartStory(Coven coven, Person person);
@@ -57,17 +72,19 @@ public abstract class AbstractAction implements StoryGenerator {
         return actionDescription;
     }
 
-    @Override public StoryInstance getOrGenerateStoryInstance(StoryFunctionRepo storyFunctionRepo, Coven coven, Person person) {
+    @Override public StoryInstance getOrGenerateStoryInstance(Coven coven, Person person) {
         StoryInstance running = coven.getRunningStory(getActionId());
         if (running == null) {
             log.info("Creating new story instance for covenId={}, actionId={}", coven.getId(), getActionId());
             running = new StoryInstance();
-            running.setPersonId(0);
+            if (person != null) {
+                running.setPersonId(person.getId());
+            }
             running.setCovenId(coven.getId());
             running.setActionId(this.getActionId());
             running.setStoryPosition(0);
-            initializeStory(storyFunctionRepo, coven, person, running);
-            coven.saveStory(running);
+            initializeStory(Daos.functionRepo, coven, person, running);
+            Daos.storyDao.saveRunningStory(running);
         }
         return running;
     }

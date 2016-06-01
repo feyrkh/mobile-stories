@@ -1,0 +1,131 @@
+{
+  "actionCategory": "Library",
+  "actionId": 4,
+  "actionName": "File unsorted reference materials",
+  "viewTriggers": [
+    {
+      "conditions": [
+        "ci_unsorted_pamphlets>0"
+      ]
+    },
+    {
+      "conditions": [
+        "ci_unsorted_books>0"
+      ]
+    },
+    {
+      "conditions": [
+        "ci_unsorted_tomes>0"
+      ]
+    }
+  ],
+  "filename": "story/library/sortBooks.json",
+  "states": [
+    {
+      "id": 0,
+      "heading": "Working toward your doctorate in library sciences...",
+      "text": "You've collecting these sacks, stacks and barrels of unsorted reference materials...now you have the unenviable task of sorting out the dross and placing the remainder into some semblance of order.",
+      "actionCost": 1,
+      "options": [
+        {
+          "id": 0,
+          "heading": "Pamphlets on evocation",
+          "text": "",
+          "transitions": [
+            "1"
+          ],
+          "viewTriggers": [
+            {
+              "conditions": [
+                "ci_library_evocation<3",
+                "ci_unsorted_pamphlets>0"
+              ]
+            }
+          ],
+          "statAdds": [
+            "ci_unsorted_pamphlets-1",
+            "ci_library_evocation+1",
+            "ss_heading=Humble beginnings...",
+            "ss_msg=You dust your hands off, having placed the last packet of half-legible papers in its proper place. The shelves are nearly bare, but your lips tingle at the thought of commanding the elements through the power of your voice alone.",
+            "pi_mental_fatigue+1"
+          ],
+          "timeCost": 2
+        },
+        {
+          "id": 0,
+          "heading": "Books on evocation",
+          "transitions": [
+            "1"
+          ],
+          "viewTriggers": [
+            {
+              "conditions": [
+                "ci_library_evocation<6",
+                "ci_unsorted_books>0"
+              ]
+            }
+          ],
+          "statAdds": [
+            "ci_unsorted_books-1",
+            "ci_library_evocation+1",
+            "ss_heading=Evocation, all sorted out",
+            "pi_mental_fatigue+2",
+            "ss_msg=The shelves are no longer an embarrassment, and your reference section on evocation is worthy of some respect! Soon you'll have enough that the card catalog will actually be useful..."
+          ],
+          "timeCost": 4
+        },
+        {
+          "id": 0,
+          "heading": "Tomes on evocation",
+          "text": "",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "1"
+          ],
+          "viewTriggers": [
+            {
+              "conditions": [
+                "ci_library_evocation<9",
+                "ci_unsorted_tomes>0"
+              ]
+            }
+          ],
+          "statAdds": [
+            "ci_unsorted_tomes-1",
+            "ci_library_evocation+1",
+            "pi_mental_fatigue+3",
+            "ss_heading=An impressive collection!",
+            "ss_msg=Your reference library on audiodigital manipulation of is bursting off the shelves! The effort put into cross-indexing, rebinding and careful labeling has paid off. Your evocation section is becoming worthy of envy, and is sure to attract attention - both welcome and otherwise."
+          ],
+          "timeCost": 8
+        }
+      ],
+      "preSubmitCalls": null,
+      "statAdds": null,
+      "canCancel": true
+    },
+    {
+      "id": 1,
+      "heading": "{{ss_heading}}",
+      "text": "{{ss_msg}}",
+      "actionCost": 0,
+      "options": [
+        {
+          "id": 0,
+          "heading": "Continue your filing...",
+          "text": "",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "timeCost": 0
+        }
+      ],
+      "preSubmitCalls": null,
+      "statAdds": null,
+      "canCancel": true
+    }
+  ]
+}

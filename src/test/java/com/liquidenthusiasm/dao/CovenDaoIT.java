@@ -7,7 +7,6 @@ import org.skife.jdbi.v2.exceptions.UnableToExecuteStatementException;
 
 import com.liquidenthusiasm.domain.Coven;
 import com.liquidenthusiasm.domain.FixtureTestUtil;
-import com.liquidenthusiasm.domain.StoryInstance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -26,6 +25,7 @@ public class CovenDaoIT extends AbstractDaoTest {
         personId = 1;
         actionId = 42;
         dao = dbi.onDemand(CovenDao.class);
+        Daos.covenDao = dao;
         c = FixtureTestUtil.loadFixture("fixtures/coven.json", Coven.class);
     }
 
@@ -79,30 +79,40 @@ public class CovenDaoIT extends AbstractDaoTest {
     }
 
     @Test
-    public void canFindStoryByPerson() {
-        StoryInstance story = FixtureTestUtil.loadFixture("fixtures/storyInstance.json", StoryInstance.class);
-        dao.saveRunningStory(story);
-        StoryInstance retrieved = dao.findRunningStory(covenId, personId, actionId);
-        assertThat(retrieved).isEqualToComparingFieldByField(story);
-    }
-
-    @Test
-    public void canFindStoryByCoven() {
-        StoryInstance story = FixtureTestUtil.loadFixture("fixtures/storyInstance.json", StoryInstance.class);
-        story.setPersonId(0);
-        dao.saveRunningStory(story);
-        StoryInstance retrieved = dao.findRunningStory(covenId, 0, actionId);
-        assertThat(retrieved).isEqualToComparingFieldByField(story);
-    }
-
-    @Test
-    public void canDeleteStory() {
-        StoryInstance story = FixtureTestUtil.loadFixture("fixtures/storyInstance.json", StoryInstance.class);
-        dao.saveRunningStory(story);
-        StoryInstance retrieved = dao.findRunningStory(covenId, personId, actionId);
+    public void canLoginAndFetchCoven() {
+        long id = dao.insert(c);
+        c.setId(id);
+        dao.login(id, "MyLoginCookie");
+        Coven retrieved = dao.findByLoginCookie("MyLoginCookie");
         assertThat(retrieved).isNotNull();
-        dao.deleteStory(story);
-        retrieved = dao.findRunningStory(covenId, personId, actionId);
+        assertThat(retrieved.getId()).isEqualTo(id);
+    }
+
+    @Test
+    public void canLoginAndFetchTwoCovens() {
+        Coven c2 = FixtureTestUtil.loadFixture("fixtures/coven.json", Coven.class);
+        c2.setPassword("passwordAgain");
+        c2.setName("newName@gmail.com");
+        long id = dao.insert(c);
+        long id2 = dao.insert(c2);
+        c.setId(id);
+        c2.setId(id2);
+        dao.login(id, "MyLoginCookie");
+        dao.login(id2, "MyLoginCookie2");
+        Coven retrieved = dao.findByLoginCookie("MyLoginCookie");
+        assertThat(retrieved).isNotNull();
+        assertThat(retrieved.getId()).isEqualTo(id);
+        Coven retrieved2 = dao.findByLoginCookie("MyLoginCookie2");
+        assertThat(retrieved2).isNotNull();
+        assertThat(retrieved2.getId()).isEqualTo(id2);
+    }
+
+    @Test
+    public void canFailToFetchLoggedInCoven() {
+        long id = dao.insert(c);
+        c.setId(id);
+        dao.login(id, "MyLoginCookie");
+        Coven retrieved = dao.findByLoginCookie("MyLoginCookie2");
         assertThat(retrieved).isNull();
     }
 }

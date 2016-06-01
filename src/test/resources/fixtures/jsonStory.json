@@ -1,11 +1,11 @@
 {
   "actionId": 1,
-  "actionCategory": "CovenAdministration",
+  "actionCategory": "Ledgers",
   "actionName": "Accept Students",
   "actionDescription": "There's room for more students...perhaps we should recruit some?",
-  "triggers": [
-    "ci_Living Space > 0",
-    "ci_Members <= 0"
+  "enableTriggers": [
+    "ci_living_space > 0",
+    "ci_members <= 0"
   ],
   "states": [
     {
@@ -46,25 +46,20 @@
             {
               "function": "registerStudent",
               "inputs": [
-                "{{ss_name}}->studentName",
-                "{{ss_focus}}->studentFocus"
+                "studentName={{ss_name}}",
+                "studentFocus={{ss_focus}}"
               ]
             }
           ],
           "transitions": [
-            {
-              "target": 0,
-              "triggers": ["si_registerStudent<1"]
-            },
-            {
-              "target": 1
-            }
+            "0 if si_registerStudent<1",
+            "1"
           ]
         },
         {
           "heading": "On second thought, perhaps not...",
           "transitions": [
-            {"target": 2}
+            2
           ]
         }
       ]
@@ -72,7 +67,7 @@
     {
       "id": 1,
       "heading": "The letter is posted!",
-      "text": "Having sent off the letter, you're quite sure {{name}} will be on the next coach out.\n\nHopefully they will be of some help with all of the {{focus}} needed."
+      "text": "Having sent off the letter, you're quite sure {{ss_name}} will be on the next coach out.\n\nHopefully they will be of some help with all of the {{ss_focus}} needed."
     },
     {
       "id": 2,

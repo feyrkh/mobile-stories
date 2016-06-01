@@ -7,6 +7,20 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="1" author="khobbs">
+        <createTable tableName="sessions">
+            <column name="covenId" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="loginCookie" type="varchar(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_updated" type="TIMESTAMP">
+            </column>
+        </createTable>
+        <createIndex tableName="sessions" indexName="loginCookie_Index">
+            <column name="loginCookie"></column>
+        </createIndex>
+
         <createTable tableName="covens">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -24,7 +38,26 @@
             <column name="admin" type="boolean" defaultValue="false"/>
             <column name="activeStoryId" type="long">
             </column>
+            <column name="focusedPersonId" type="long"/>
         </createTable>
+
+        <createTable tableName="people">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="covenId" type="bigint">
+            </column>
+            <column name="name" type="varchar(255)">
+            </column>
+            <column name="activeStoryId" type="long"/>
+            <column name="activeActionCategoryId" type="long"/>
+            <column name="timeRemaining" type="int"/>
+        </createTable>
+
+
+        <createIndex tableName="people" indexName="peopleCovenId_Index">
+            <column name="covenId"/>
+        </createIndex>
 
         <createTable tableName="stories">
             <column name="covenId" type="bigint">

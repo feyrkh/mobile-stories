@@ -87,10 +87,10 @@ logging:
       maxFileSize: 10MB
 
 # the key needs to match the suffix of the renderer
-#viewRendererConfiguration:
-#    .ftl:
-#        strict_syntax: yes
-#        whitespace_stripping: yes
+viewRendererConfiguration:
+    .ftl:
+        strict_syntax: yes
+        whitespace_stripping: yes
 
 #metrics:
 #  type: graphite

@@ -1,0 +1,194 @@
+{
+  "actionCategory": "Quarters",
+  "actionId": 3,
+  "actionName": "Meditate",
+  "enableTriggers": [
+    "pi_meditation_skill>0"
+  ],
+  "filename": "story/quarters/meditate.json",
+  "states": [
+    {
+      "id": 0,
+      "heading": "Focus your mind in meditation",
+      "text": "Sitting crosslegged on a thin rug, you push out fatigue and distraction, working to let your mind float freely.",
+      "actionCost": 0,
+      "options": [
+        {
+          "id": 0,
+          "heading": "Relax",
+          "text": "Fatigue clouds your mind, preventing clear thought. An unfocused state of relaxation will allow you to sweep away the distractions.",
+          "transitions": [
+            "1 if si_random<0",
+            "2"
+          ],
+          "enableTriggers": [
+            {
+              "conditions": [
+                "pi_fatigue>=3"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "Focus",
+          "text": "Harnessing the mysterious forces of magic requires discipline and concentration. Focus your thoughts, or you may not have the mental fortitude needed.",
+          "transitions": [
+            "0"
+          ],
+          "enableTriggers": [
+            {
+              "conditions": [
+                "pi_fatigue<19",
+                "pi_focus<20"
+              ]
+            }
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "Mantra",
+          "text": "Meditating on a single concept will help to weave it into the fabric of your soul. Dangerous, perhaps, but reflection is necessary if you are to deepen your understanding.",
+          "fields": [],
+          "transitions": [
+            "0"
+          ],
+          "enableTriggers": [
+            {
+              "conditions": [
+                "pi_focus>0",
+                "pi_fatigue<17"
+              ]
+            }
+          ]
+        }
+      ],
+      "canCancel": true
+    },
+    {
+      "id": 1,
+      "heading": "You fell asleep!",
+      "text": "You awake with a start, with a stiff neck and drool running down your chin. What a waste! Your attempt at meditation led to an uncomfortable nap and lost hours.",
+      "actionCost": 1,
+      "options": [
+        {
+          "id": 0,
+          "heading": "Wipe the drool from your face",
+          "text": "",
+          "fields": [],
+          "transitions": [
+            "-1"
+          ]
+        }
+      ],
+      "canCancel": false
+    },
+    {
+      "id": 2,
+      "heading": "A tranquil mind",
+      "text": "Your thoughts turn inward and extinguish themselves one by one until your mind is an empty void. In the silence, you find peace. Floating in emptiness, worries and cares are put into their proper perspective. ",
+      "actionCost": 1,
+      "options": [
+        {
+          "id": 0,
+          "heading": "Awaken",
+          "text": "",
+          "fields": [],
+          "transitions": [
+            "3"
+          ]
+        },
+        {
+          "id": 0,
+          "heading": "Extinguish your sense of self",
+          "text": "The self is an illusion. Dispel the illusion if you want to see the truth hidden behind it.",
+          "fields": [],
+          "transitions": [
+            "1 if si_random<0",
+            "3"
+          ],
+          "viewTriggers": [
+            {
+              "conditions": [
+                "si_random>700",
+                "si_fatigue>0"
+              ]
+            },
+            {
+              "conditions": [
+                "si_fatigue<3",
+                "si_fatigue>0"
+              ]
+            }
+          ],
+          "randomAdjustment": {
+            "outputVar": "si_random",
+            "baseChance": 800,
+            "stat": "pi_fatigue",
+            "baseStat": 0,
+            "statAdjustment": 50
+          }
+        },
+        {
+          "id": 0,
+          "heading": "Cultivate inner peace",
+          "text": "An engaged mind is constrained by the direction of its gaze. It will miss that which it is not expecting. A tranquil mind accepts all that is, expecting nothing, and therefore seeing everything.",
+          "fields": [],
+          "transitions": [
+            "1 if si_random<0",
+            "2"
+          ],
+          "viewTriggers": [
+            {
+              "conditions": [
+                "si_random>300",
+                "si_fatigue>0"
+              ]
+            }
+          ],
+          "randomAdjustment": {
+            "outputVar": "si_random",
+            "baseChance": 300,
+            "stat": "pi_fatigue",
+            "baseStat": 0,
+            "statAdjustment": 50
+          }
+        },
+        {
+          "id": 0,
+          "heading": "Dismiss worldly concerns",
+          "text": "The purity of your will is the only leverage you have against the forces of magic. Discard your corporeal concerns and make weapons of your mind and soul.",
+          "fields": [],
+          "transitions": [
+            "1 if si_random<0",
+            "2"
+          ],
+          "viewTriggers": [
+            {
+              "conditions": [
+                "si_random>100",
+                "si_fatigue>0"
+              ]
+            }
+          ],
+          "randomAdjustment": {
+            "outputVar": "si_random",
+            "baseChance": 800,
+            "stat": "pi_fatigue",
+            "baseStat": 0,
+            "statAdjustment": 50
+          }
+        }
+      ],
+      "canCancel": false
+    },
+    {
+      "id": 3,
+      "heading": "An awakened mind",
+      "text": "A timeless moment later you open your eyes, ready to embrace new challenges.",
+      "actionCost": 0,
+      "options": [],
+      "canCancel": false
+    }
+  ]
+}

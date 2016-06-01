@@ -1,0 +1,178 @@
+{
+  "actionCategory": "Quarters",
+  "actionId": 6,
+  "actionName": "Sleep, the gentle tyrant",
+  "states": [
+    {
+      "id": 0,
+      "canCancel": true,
+      "heading": "Sleep, the gentle tyrant",
+      "text": "",
+      "options": [
+        {
+          "heading": "A day of rest",
+          "timeCost": 24,
+          "text": "Religious observation, sloth, or pure decadence? For the overworked or simply lazy, there may be nothing finer than a day spent in indolent relaxation.",
+          "transitions": [
+            "1"
+          ],
+          "statAdds": [
+            "pi_time=24",
+            "ci_free_days-1",
+            "pi_fatigue-40",
+            "pi_mental_fatigue=0",
+            "ss_heading=Aaaaaah...",
+            "ss_msg=Leaving your bed only for absolute necessities, you spend the entire day on light entertainment, naps and pure frivolity. After an early night, you awake fully refreshed and eager to get back to business."
+          ],
+          "enableTriggers": [
+            {
+              "conditions": [
+                "ci_free_days>0"
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "A good night's sleep",
+          "text": "Your bed beckons at the end of a long day.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "1"
+          ],
+          "timeCost": 7,
+          "statAdds": [
+            "pi_fatigue-10",
+            "pi_mental_fatigue-10",
+            "pi_time=24",
+            "ci_free_days-1",
+            "ss_heading=A restful night",
+            "ss_msg=A deep and dreamless sleep leaves you ready to face the day."
+          ],
+          "viewTriggers": [],
+          "enableTriggers": [
+            {
+              "conditions": [
+                "pi_time <= 8"
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "A fitful night",
+          "text": "Bleary-eyed, you stumble toward your bed in the dead of night, knowing your slumber will be filled with restless dreams.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "1"
+          ],
+          "statAdds": [
+            "pi_fatigue-4",
+            "pi_mental_fatigue-4",
+            "pi_time=24",
+            "ci_free_days-1",
+            "ss_heading=An unsatisfying rest",
+            "ss_msg=Your head seems to have barely hit the pillow when the sun is shining harshly through gaps in the curtain, waking you to a new day."
+          ],
+          "timeCost": 3,
+          "viewTriggers": [
+            {
+              "conditions": [
+                "pi_time <= 6",
+                "ci_free_days>0"
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "A cat-nap",
+          "text": "Perhaps you could just close your eyes for a few minutes...it won't be terribly restful, but possibly better than nothing.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "2 if si_random < 0",
+            "3"
+          ],
+          "timeCost": 1,
+          "randomAdjustment": {
+            "outputVar": "si_random",
+            "baseChance": 700,
+            "stat": "pi_luck",
+            "baseStat": 0,
+            "statAdjustment": 50
+          },
+          "enableTriggers": [
+            {
+              "conditions": [
+                "pi_fatigue>0"
+              ]
+            },
+            {
+              "conditions": [
+                "pi_mental_fatigue>0"
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "A sleepless night",
+          "text": "So much to do, so little time! The day slipped away, and then the night as well, and here you are facing the rising sun without having so much as glanced at your bed.",
+          "fields": [],
+          "postSubmitCalls": [],
+          "transitions": [
+            "0"
+          ],
+          "timeCost": 0,
+          "viewTriggers": [
+            {
+              "conditions": [
+                "pi_time<1"
+              ]
+            }
+          ],
+          "enableTriggers": [
+            {
+              "conditions": [
+                "ci_free_days>0"
+              ]
+            }
+          ],
+          "statAdds": [
+            "pi_fatigue+3",
+            "pi_mental_fatigue+6",
+            "pi_time=24",
+            "ci_free_days-1",
+            "ss_heading=A sleepless night",
+            "ss_msg=There's nothing for it - you give your pillow a last glance, then turn grimly to face the day."
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "text": "{{ss_msg}}",
+      "options": [],
+      "heading": "{{ss_heading}}",
+      "canCancel": true
+    },
+    {
+      "id": 2,
+      "text": "You toss and turn, unable to dismiss your bodily aches and racing thoughts. Eventually you give up, unable to find rest.",
+      "options": [],
+      "heading": "Wasted time",
+      "statAdds": [
+        "pi_mental_fatigue+1"
+      ]
+    },
+    {
+      "id": 3,
+      "text": "You slip into a light sleep, and wake an hour later feeling slightly refreshed.",
+      "options": [],
+      "heading": "A pleasant nap",
+      "statAdds": [
+        "pi_mental_fatigue-2",
+        "pi_fatigue-1"
+      ]
+    }
+  ]
+}

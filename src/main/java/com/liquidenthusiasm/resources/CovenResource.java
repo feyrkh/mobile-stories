@@ -12,9 +12,11 @@ import org.slf4j.LoggerFactory;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.collect.ImmutableList;
 import com.liquidenthusiasm.BCryptUtil;
-import com.liquidenthusiasm.dao.CovenDao;
+import com.liquidenthusiasm.action.ActionRepo;
+import com.liquidenthusiasm.dao.Daos;
 import com.liquidenthusiasm.domain.Coven;
 import com.liquidenthusiasm.domain.Person;
+import com.liquidenthusiasm.domain.StoryInstance;
 import io.dropwizard.auth.Auth;
 
 @Path("/coven")
@@ -23,21 +25,14 @@ public class CovenResource {
 
     private static final Logger log = LoggerFactory.getLogger(CovenResource.class);
 
-    private final CovenDao covenDao;
-
-    public CovenResource(CovenDao covenDao) {
-        this.covenDao = covenDao;
-    }
-
-    public CovenDao getCovenDao() {
-        return covenDao;
+    public CovenResource() {
     }
 
     @Path("{id}")
     @GET
     public Coven get(@Auth Coven currentCoven, @PathParam("id") long id) {
         log.info("Coven with requestingId={} is asking for coven with requestedId={}", currentCoven.getId(), id);
-        Coven c = covenDao.findById(id);
+        Coven c = Daos.covenDao.findById(id);
         if (c != null) {
             if (c.getId() != currentCoven.getId()) {
                 throw new ForbiddenException();
@@ -52,7 +47,7 @@ public class CovenResource {
 
     @Path("intAttr/{attrName}")
     @GET
-    public int getIntAttr(@Auth Coven currentCoven, @PathParam("attrName") String attrName) {
+    public Integer getIntAttr(@Auth Coven currentCoven, @PathParam("attrName") String attrName) {
         return currentCoven.getIntProperty(attrName);
     }
 
@@ -60,23 +55,44 @@ public class CovenResource {
     @Timed
     public List<Coven> getAll() {
         log.info("Fetching list of all covens");
-        ImmutableList<Coven> covens = covenDao.findAll();
+        ImmutableList<Coven> covens = Daos.covenDao.findAll();
         covens.parallelStream().forEach(Coven::sanitize);
         return covens;
     }
 
     @POST
     public Coven create(@Valid Coven coven) {
-        if (covenDao.findByName(coven.getName()) != null) {
+        if (Daos.covenDao.findByName(coven.getName()) != null) {
             log.info("Tried to create coven with name={} but it already exists.", coven.getName());
             throw new BadRequestException("User with that email address already exists.");
         }
 
         coven.setPassword(BCryptUtil.hashpw(coven.getPassword()));
         log.info("Creating new coven {}", coven);
-        long id = covenDao.insert(coven);
+        long id = Daos.covenDao.insert(coven);
         coven.setId(id);
         log.info("Created new coven with id={}, name={}", coven.getId(), coven.getName());
+
+        // Create the first member
+        Person person = new Person();
+        person.setCovenId(coven.getId());
+        long personId = Daos.personDao.insert(person);
+        person.setId(personId);
+
+        // Create the prologue story
+        StoryInstance prologueStory =
+            Daos.actionRepo.getAction(0).getOrGenerateStoryInstance(coven, person);
+        person.setActiveStoryId(prologueStory.getActionId());
+        Daos.personDao.update(person);
+
+        coven.setFocusedPersonId(personId);
+        coven.addMember(person);
+        Daos.covenDao.update(coven);
+
         return coven;
+    }
+
+    public ActionRepo getActionRepo() {
+        return Daos.actionRepo;
     }
 }

@@ -2,9 +2,12 @@ package com.liquidenthusiasm.domain;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 import org.slf4j.Logger;
@@ -20,6 +23,8 @@ public class StoryInstance {
 
     static final ObjectMapper MAPPER = new ObjectMapper();
 
+    private static final String VALUE_CHANGE_KEY = "!$VC$!";
+
     private long covenId;
 
     private long personId;
@@ -33,6 +38,8 @@ public class StoryInstance {
     private String error;
 
     private String flash;
+
+    private boolean deleted;
 
     @JsonProperty("state")
     public String getStateJson() {
@@ -79,11 +86,49 @@ public class StoryInstance {
     }
 
     public void addFlash(String msg) {
+        msg = StringUtils.capitalize(msg);
         if (flash == null) {
             flash = msg;
         } else {
             flash = String.format("%s\n%s", flash, msg);
         }
+    }
+
+    public void cleanBeforeNewChoice() {
+        setFlash(null);
+        clearValueChanges();
+    }
+
+    public Integer getIntProperty(String intVarName) {
+        Object stateVal = state(intVarName);
+        if (stateVal == null) {
+            return 0;
+        }
+        return (Integer) stateVal;
+    }
+
+    public void setIntProperty(String intVarName, int newValue) {
+        state(intVarName, newValue);
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setStrProperty(String strVarName, String newValue) {
+        if (newValue != null) {
+            state(strVarName, newValue);
+        } else {
+            state.remove(strVarName);
+        }
+    }
+
+    public String getStrProperty(String strVarName) {
+        return String.valueOf(state(strVarName));
     }
 
     public static class Mapper implements ResultSetMapper<StoryInstance> {
@@ -131,6 +176,26 @@ public class StoryInstance {
 
     public void setStoryPosition(int storyPosition) {
         this.storyPosition = storyPosition;
+    }
+
+    @JsonIgnore
+    public List<ValueChange> getValueChanges() {
+        if (state == null)
+            return null;
+        return (List<ValueChange>) state(VALUE_CHANGE_KEY);
+    }
+
+    private void clearValueChanges() {
+        state.remove(VALUE_CHANGE_KEY);
+    }
+
+    public void valueChange(ValueChange vc) {
+        List<ValueChange> vcArr = (List<ValueChange>) state(VALUE_CHANGE_KEY);
+        if (vcArr == null) {
+            vcArr = new ArrayList<>(1);
+            state(VALUE_CHANGE_KEY, vcArr);
+        }
+        vcArr.add(vc);
     }
 
     public StoryInstance state(String key, Object value) {

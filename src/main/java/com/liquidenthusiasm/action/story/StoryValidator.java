@@ -17,7 +17,11 @@ public class StoryValidator {
         Map<String, String> formValues,
         Coven coven,
         Person person, StoryInstance story) {
-        String thisFormValue = formValues.get(fieldName);
+        String thisFormValue;
+        if (formValues == null) {
+            return "No formValues while trying to validate " + fieldName;
+        }
+        thisFormValue = formValues.get(fieldName);
         switch (validationRuleName) {
         case "maxLength":
             return maxLength(fieldLabel, (int) validationValue, thisFormValue);
@@ -28,6 +32,8 @@ public class StoryValidator {
     }
 
     private static String maxLength(String fieldName, int validationValue, String thisFormValue) {
+        if (thisFormValue == null)
+            return null;
         if (thisFormValue.length() > validationValue) {
             return String.format("%s must be no more than %d characters long", fieldName, validationValue);
         }
@@ -35,7 +41,7 @@ public class StoryValidator {
     }
 
     private static String minLength(String fieldName, int validationValue, String thisFormValue) {
-        if (thisFormValue.length() < validationValue) {
+        if (thisFormValue == null || thisFormValue.length() < validationValue) {
             return String.format("%s must be at least %d characters long", fieldName, validationValue);
         }
         return null;

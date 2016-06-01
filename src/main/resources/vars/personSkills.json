@@ -1,0 +1,17 @@
+[
+  {
+    "name": "pi_luck",
+    "label": "Luck",
+    "desc": "How well fortune favors you."
+  },
+  {
+    "name": "pi_meditation_skill",
+    "label": "Meditation",
+    "desc": "You've studied the arts of meditation.",
+    "valueDescriptions": {
+      "0": "You wouldn't know transcendental from incidental.",
+      "1": "You're aware that there's a proper way to breathe in and out.",
+      "2": "You're familiar with a number of breathing techniques."
+    }
+  }
+]

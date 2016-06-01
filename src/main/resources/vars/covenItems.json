@@ -1,0 +1,17 @@
+[
+  {
+    "name": "ci_unsorted_books",
+    "label": "Unsorted reference books",
+    "desc": "A satchel of reference books which cover some branch of esoteric knowledge or another.\nThese won't be terribly useful as they are, but perhaps if you organize them in the library then some patterns will be made more clear."
+  },
+  {
+    "name": "ci_unsorted_pamphlets",
+    "label": "Unsorted pamphlets",
+    "desc": "A scattering of pamphlets which deal with the basics of some branch of esoteric knowledge or another."
+  },
+  {
+    "name": "ci_unsorted_tomes",
+    "label": "Unsorted tomes",
+    "desc": "A waterproof chest of tomes and grimoires, containing the secrets of some branch of esoteric knowledge or another."
+  }
+]
