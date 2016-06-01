@@ -11,6 +11,7 @@ import com.liquidenthusiasm.action.story.FieldDef;
 import com.liquidenthusiasm.action.story.FieldDefSelectOption;
 import com.liquidenthusiasm.action.story.JsonStory;
 import com.liquidenthusiasm.action.story.StoryChoice;
+import com.liquidenthusiasm.action.vars.VarRepo;
 import com.liquidenthusiasm.dao.Daos;
 import com.liquidenthusiasm.domain.*;
 import com.liquidenthusiasm.util.DaosTestUtil;
@@ -42,6 +43,7 @@ public class JsonStoryTest {
         person = mock(Person.class);
         when(person.getTimeRemaining()).thenReturn(24);
         StoryFunctionRepo storyFunctionRepo = new StoryFunctionRepo();
+        Daos.varRepo = new VarRepo();
         Daos.functionRepo = storyFunctionRepo;
         storyFunctionRepo.put("randomPersonName", (args, c, p, s) -> {
             s.state("ss_randomPersonName", "Rando Cardrissian");

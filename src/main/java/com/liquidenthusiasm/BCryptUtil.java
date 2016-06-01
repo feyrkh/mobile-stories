@@ -1,6 +1,6 @@
 package com.liquidenthusiasm;
 
-import jBCrypt.BCrypt;
+import org.mindrot.jbcrypt.BCrypt;
 
 public final class BCryptUtil {
 

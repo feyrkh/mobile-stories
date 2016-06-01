@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.liquidenthusiasm.action.vars.VarRepo;
+import com.liquidenthusiasm.dao.Daos;
 import com.liquidenthusiasm.domain.Coven;
 import com.liquidenthusiasm.domain.Person;
 
@@ -25,8 +27,13 @@ public class StoryTriggerTest {
 
     StoryTrigger st;
 
+    VarRepo vr;
+
     @Before
     public void setup() {
+        vr = new VarRepo();
+        Daos.varRepo = vr;
+
         st = new StoryTrigger();
         coven = mock(Coven.class);
         when(coven.getIntProperty("ci_v")).thenReturn(1);

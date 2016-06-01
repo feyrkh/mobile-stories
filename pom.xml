@@ -68,9 +68,9 @@
         </dependency>
 
         <dependency>
-            <groupId>jbcrypt</groupId>
+            <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
-            <version>0.3</version>
+            <version>0.3m</version>
         </dependency>
         <dependency>
             <groupId>net.openhft</groupId>
