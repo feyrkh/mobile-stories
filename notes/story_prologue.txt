@@ -1,0 +1,27 @@
+Prologue
+* backstory
+The portal, shimmering like quicksilver shot through with liquid gold, opens before you. To take a step forward will end your life, birthing you into a new world. A harsh one, by all accounts, but one ripe with opportunity. With magic and adventure. New vistas to explore - physical, mental and spiritual. The possibilities are endless, terrifying, galvanizing. A harsh voice prods you forward as one of the soldiers behind you begins to lose patience. You refuse to rush, however, savoring the last moments of your life in this world and reliving the path that brought you here. 
+- Reflect on your childhood
+- Consider the events that led up to this moment
+- Contemplate your hopes for the future
+- Step forward (requires ps_past_life, ps_join_cause, ps_goal)
+* Player background (sets ps_past_life)
+    * Nobody special
+    * Wealthy heir
+    * Mystic
+    * Academic
+    * Bureaucrat
+* Circumstances leading to working in an atelier  (sets ps_join_cause)
+    * patriot
+    * humanitarian
+    * criminal
+    * blackmailed
+    * bankrupt
+* Hopes for the future (sets ps_goal)
+    * return
+    * community
+    * power
+    * luxury
+* {{ss_flash_heading}} - text is {{ss_flash_text}}, set by each thingy
+    * Return to the present (goto 0)
+* Into a new world
